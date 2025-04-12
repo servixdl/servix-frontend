@@ -24,7 +24,7 @@
 - **Base de datos:** PostgreSQL  
 - **Autenticación:** JWT  
 - **Chat GPT:** Integración con OpenAI API  
-- **Deploy:** Netlify (frontend) / Render o Railway (backend)
+- **Deploy:** Netlify (frontend) /  (backend)
 
 ---
 
