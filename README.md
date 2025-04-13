@@ -28,3 +28,5 @@
 
 ---
 
+## 🧪 Estado del proyecto
+🚧Proyecto en desarrollo. Se encuentra en etapa de implementación de MVP. Las funcionalidades básicas de inicio de sesión, búsqueda y perfil ya están activadas. En próximas versiones se integrará el sistema de pagos y el asistente con GPT.
