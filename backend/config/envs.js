@@ -1,6 +1,10 @@
-import "dotenv/config"
+import dotenv from 'dotenv'
+dotenv.config()
 
 
 const envs =  {
-    port_envs : 
+    port: process.env.PORT,
 }
+
+
+export {envs}
