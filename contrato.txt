@@ -1,0 +1,105 @@
+
+// POST  /crearUsuario
+response:
+{
+"rut":"186655222",
+"nombre":"matias",
+"fecha_nacimiento":"1994/01/29",
+"correo":"matias@gmail.com",
+"contrasena":"*******",
+}
+
+request:
+{
+"rut":"186655222",
+"nombre":"matias",
+"fecha_nacimiento":"1994/01/29",
+"correo":"matias@gmail.com",
+}
+
+///////////////////////////////////////////////////
+
+//POST /login
+response:
+{
+"correo":"matias@gmail.com",
+"contrasena":"*******",
+}
+
+
+request:
+{
+    "token":"*********************",
+    "usuario":{
+        "rut":"186655222",
+        "nombre":"matias",
+        "fecha_nacimiento":"1994/01/29",
+        "correo":"matias@gmail.com",
+        "tipoUsuario":"cliente"
+            }
+}
+
+///////////////////////////////////////////////////
+
+//POST /citas
+response:
+Authorization: Bearer   token
+{
+    "venta_id":"10",
+    "fecha_cita":"2024-04-12",
+    "estado":"confirmado"
+}
+
+request:
+{
+    "venta_id":"10",
+    "fecha_cita":"2024-04-12",
+    "estado":"confirmado"
+}
+
+
+///////////////////////////////////////////////////
+
+
+//POST /servicio
+response:
+Authorization: Bearer   token
+{
+    "nombre":"clases de piano",
+    "precio":20000,
+    "descripcion":"clases para principiantes"
+    "tipo_servicio_id":2
+}
+request:
+{
+    "nombre":"clases de piano",
+    "precio":20000,
+    "descripcion":"clases para principiantes"
+}
+
+/////////////////////////////////////////////////
+
+// POST /venta
+
+response:
+Authorization: Bearer   token
+{
+    "cliente_id":10,
+    "servicio_id":15,
+    "fecha_venta":"2024-04-15",
+    "total":200000
+}
+
+request
+
+{
+    "cliente_id":10,
+    "servicio_id":15,
+    "fecha_venta":"2024-04-15",
+    "total":200000
+}
+/////////////////////////////////////////////////
+
+
+
+
