@@ -12,6 +12,7 @@ export default function RegisterPage() {
     name: '',
     email: '',
     password: '',
+    confirmPassword: '',
     day: '',
     month: '',
     year: '',
@@ -46,23 +47,44 @@ export default function RegisterPage() {
   };
 
   /**
+   * Valida que la contraseña cumpla con las reglas requeridas.
+   * @param {string} password - Contraseña a validar.
+   * @returns {string|null} Mensaje de error si hay, o null si es válida.
+   */
+  const validatePassword = (password) => {
+    if (password.length < 6 || password.length > 10) {
+      return 'La contraseña debe tener entre 6 y 10 caracteres.';
+    }
+    if (!/^[a-zA-Z0-9.]+$/.test(password)) {
+      return 'La contraseña solo puede contener letras, números y puntos.';
+    }
+    const uppercaseCount = (password.match(/[A-Z]/g) || []).length;
+    if (uppercaseCount > 2) {
+      return 'La contraseña solo puede contener hasta 2 letras mayúsculas.';
+    }
+    return null;
+  };
+
+  /**
    * Maneja el envío del formulario y valida los datos.
    * @param {Object} e - Evento del formulario.
    */
   const handleSubmit = (e) => {
     e.preventDefault();
-    const { rut, name, email, password, day, month, year } = form;
+    const { rut, name, email, password, confirmPassword, day, month, year } = form;
 
-    // Validaciones
-    if (!rut || !name || !email || !password || !day || !month || !year) {
+    if (!rut || !name || !email || !password || !confirmPassword || !day || !month || !year) {
       return setError('Todos los campos son obligatorios.');
     }
 
     if (rut.length > 9) return setError('El RUT no puede tener más de 9 caracteres.');
-    if (password.length < 10) return setError('La contraseña debe tener al menos 10 caracteres.');
+    if (password !== confirmPassword) return setError('Las contraseñas no coinciden.');
+
+    const passwordError = validatePassword(password);
+    if (passwordError) return setError(passwordError);
+
     if (!validateAge(year, month, day)) return setError('Debes tener al menos 18 años.');
 
-    // Si pasa validación, continuar...
     alert('Formulario válido. Puedes enviar los datos al backend.');
   };
 
@@ -77,7 +99,6 @@ export default function RegisterPage() {
           </div>
         )}
 
-        {/* RUT */}
         <InputField
           label="RUT"
           name="rut"
@@ -87,7 +108,6 @@ export default function RegisterPage() {
           onChange={handleChange}
         />
 
-        {/* Nombre */}
         <InputField
           label="Nombre"
           name="name"
@@ -97,7 +117,6 @@ export default function RegisterPage() {
           onChange={handleChange}
         />
 
-        {/* Fecha de nacimiento */}
         <div className="mb-4">
           <label className="text-sm font-medium text-gray-700 block mb-1">Fecha de nacimiento</label>
           <div className="flex gap-2">
@@ -125,7 +144,6 @@ export default function RegisterPage() {
           </div>
         </div>
 
-        {/* Email */}
         <InputField
           label="Correo electrónico"
           name="email"
@@ -135,17 +153,24 @@ export default function RegisterPage() {
           onChange={handleChange}
         />
 
-        {/* Contraseña */}
         <InputField
           label="Contraseña"
           name="password"
           type="password"
-          placeholder="Mínimo 10 caracteres"
+          placeholder="Mínimo 6 caracteres"
           value={form.password}
           onChange={handleChange}
         />
 
-        {/* Botón de registro */}
+        <InputField
+          label="Repite la contraseña"
+          name="confirmPassword"
+          type="password"
+          placeholder="Repite tu contraseña"
+          value={form.confirmPassword}
+          onChange={handleChange}
+        />
+
         <button
           type="submit"
           className="w-full mt-4 bg-black text-white py-2 rounded-lg font-semibold hover:opacity-90 transition"
