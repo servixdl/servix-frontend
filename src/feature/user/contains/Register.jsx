@@ -1,20 +1,12 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import InputField from '../../../utils/InputField.jsx';
-import SelectField from '../../../utils/SelectField.jsx';
-import { useAuth } from '../../../context/AuthContext.jsx';
-import { ENDPOINT } from '../../../config/constans.js';
+import InputField from '../../../utils/InputField';
+import SelectField from '../../../utils/SelectField';
 
-// Esto es para crear los años desde 1930 hasta el actual
+// Lista de años desde 1930 hasta el año actual
 const currentYear = new Date().getFullYear();
 const years = Array.from({ length: currentYear - 1930 + 1 }, (_, i) => 1930 + i);
 
-export default function Registerpage() {
-  const navigate = useNavigate();
-  const { login } = useAuth();
-
-  // Este es el estado para guardar lo que escribe el usuario
+export default function RegisterPage() {
   const [form, setForm] = useState({
     rut: '',
     name: '',
@@ -27,125 +19,133 @@ export default function Registerpage() {
 
   const [error, setError] = useState('');
 
-  // Esta función actualiza lo que el usuario va escribiendo
+  /**
+   * Actualiza los valores del formulario y limpia errores.
+   * @param {Object} e - Evento del input.
+   */
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
-    setError(''); // Limpio el error si había
+    setError('');
   };
 
-  // Esta función sirve para saber si la persona tiene 18 años o más
+  /**
+   * Valida que el usuario tenga al menos 18 años.
+   * @param {string|number} y - Año de nacimiento.
+   * @param {string|number} m - Mes de nacimiento.
+   * @param {string|number} d - Día de nacimiento.
+   * @returns {boolean} true si cumple los 18 años.
+   */
   const validateAge = (y, m, d) => {
     const birth = new Date(`${y}-${m}-${d}`);
-    const now = new Date();
-    const age = now.getFullYear() - birth.getFullYear();
-    const mo = now.getMonth() - birth.getMonth();
-    const da = now.getDate() - birth.getDate();
+    const today = new Date();
+    const age = today.getFullYear() - birth.getFullYear();
+    const monthDiff = today.getMonth() - birth.getMonth();
+    const dayDiff = today.getDate() - birth.getDate();
 
-    // Esto revisa si ya cumplió los 18 exactos
-    return age > 18 || (age === 18 && (mo > 0 || (mo === 0 && da >= 0)));
+    return age > 18 || (age === 18 && (monthDiff > 0 || (monthDiff === 0 && dayDiff >= 0)));
   };
 
-  // Esta función se ejecuta cuando el usuario hace click en "Registrarme"
-  const handleSubmit = async (e) => {
+  /**
+   * Maneja el envío del formulario y valida los datos.
+   * @param {Object} e - Evento del formulario.
+   */
+  const handleSubmit = (e) => {
     e.preventDefault();
     const { rut, name, email, password, day, month, year } = form;
 
-    // Validaciones: si falta algo, no deja continuar
+    // Validaciones
     if (!rut || !name || !email || !password || !day || !month || !year) {
       return setError('Todos los campos son obligatorios.');
     }
 
     if (rut.length > 9) return setError('El RUT no puede tener más de 9 caracteres.');
-    if (password.length < 8) return setError('La contraseña debe tener al menos 8 caracteres.');
+    if (password.length < 10) return setError('La contraseña debe tener al menos 10 caracteres.');
     if (!validateAge(year, month, day)) return setError('Debes tener al menos 18 años.');
 
-    try {
-      // Envío los datos al backend (esto guarda al usuario en la base de datos)
-      const res = await axios.post(ENDPOINT.register, form);
-
-      // Guardo la info del usuario en el contexto (como sesión iniciada)
-      login(res.data.user, res.data.token);
-
-      alert('Registrado con éxito');
-      navigate('/login'); // Lo llevo a la página de login
-    } catch (err) {
-      // Si algo falla, muestro el error
-      setError(err.response?.data?.message || 'Error al registrar.');
-    }
+    // Si pasa validación, continuar...
+    alert('Formulario válido. Puedes enviar los datos al backend.');
   };
 
-  // Esto es lo que se ve en pantalla: el formulario pero algo pasa no renderiza?
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-gray-200 flex items-center justify-center">
-      <form
-        onSubmit={handleSubmit}
-        className="w-full max-w-sm bg-white shadow-xl rounded-xl p-8"
-      >
-        <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">Crea tu cuenta</h2>
+    <div className="min-h-screen bg-gradient-to-b from-white to-gray-100 flex items-center justify-center">
+      <form onSubmit={handleSubmit} className="w-full max-w-sm bg-white p-8 rounded-xl shadow-md">
+        <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">Registro</h2>
 
-        {/* Si hay error, lo muestro aquí */}
-        {error && <div className="mb-4 p-2 text-sm text-red-700 bg-red-100 rounded">{error}</div>}
+        {error && (
+          <div className="mb-4 p-3 rounded-md bg-red-100 text-red-700 text-sm border border-red-300">
+            {error}
+          </div>
+        )}
 
-        {/* Campo para el RUT */}
-        <div className="mb-4">
-          <label htmlFor="rut" className="text-sm font-medium text-gray-700">RUT</label>
-          <input
-            type="text"
-            name="rut"
-            id="rut"
-            maxLength={9}
-            value={form.rut}
-            onChange={handleChange}
-            placeholder="Ej: 123456789"
-            className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-black/20"
-          />
-        </div>
+        {/* RUT */}
+        <InputField
+          label="RUT"
+          name="rut"
+          type="text"
+          placeholder="Ej: 123456789"
+          value={form.rut}
+          onChange={handleChange}
+        />
 
-        {/* Campo para el nombre */}
-        <div className="mb-4">
-          <label htmlFor="name" className="text-sm font-medium text-gray-700">Nombre</label>
-          <input
-            type="text"
-            name="name"
-            id="name"
-            value={form.name}
-            onChange={handleChange}
-            placeholder="Tu nombre completo"
-            className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-black/20"
-          />
-        </div>
+        {/* Nombre */}
+        <InputField
+          label="Nombre"
+          name="name"
+          type="text"
+          placeholder="Tu nombre completo"
+          value={form.name}
+          onChange={handleChange}
+        />
 
-        {/* Fecha de nacimiento con 3 select: día, mes, año */}
+        {/* Fecha de nacimiento */}
         <div className="mb-4">
           <label className="text-sm font-medium text-gray-700 block mb-1">Fecha de nacimiento</label>
           <div className="flex gap-2">
-            <SelectField name="day" label="Día" value={form.day} onChange={handleChange} options={Array.from({ length: 31 }, (_, i) => i + 1)} />
-            <SelectField name="month" label="Mes" value={form.month} onChange={handleChange} options={Array.from({ length: 12 }, (_, i) => i + 1)} />
-            <SelectField name="year" label="Año" value={form.year} onChange={handleChange} options={years} />
+            <SelectField
+              name="day"
+              label="Día"
+              value={form.day}
+              onChange={handleChange}
+              options={Array.from({ length: 31 }, (_, i) => i + 1)}
+            />
+            <SelectField
+              name="month"
+              label="Mes"
+              value={form.month}
+              onChange={handleChange}
+              options={Array.from({ length: 12 }, (_, i) => i + 1)}
+            />
+            <SelectField
+              name="year"
+              label="Año"
+              value={form.year}
+              onChange={handleChange}
+              options={years}
+            />
           </div>
         </div>
 
-        {/* Campo de email */}
+        {/* Email */}
         <InputField
           label="Correo electrónico"
           name="email"
           type="email"
+          placeholder="correo@ejemplo.com"
           value={form.email}
           onChange={handleChange}
-          placeholder="correo@ejemplo.com"
         />
 
-        {/* Campo de contraseña */}
+        {/* Contraseña */}
         <InputField
           label="Contraseña"
           name="password"
           type="password"
+          placeholder="Mínimo 10 caracteres"
           value={form.password}
           onChange={handleChange}
-          placeholder="Mínimo 8 caracteres"
         />
 
-        {/* Botón para enviar */}
+        {/* Botón de registro */}
         <button
           type="submit"
           className="w-full mt-4 bg-black text-white py-2 rounded-lg font-semibold hover:opacity-90 transition"
