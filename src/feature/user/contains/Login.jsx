@@ -27,7 +27,7 @@ export default function LoginPage() {
         {/* Botón de inicio */}
         <button
           type="submit"
-          className="w-full mt-4 bg-black text-white py-2 rounded-lg font-semibold hover:opacity-90 transition"
+          className="w-full mt-4 bg-black text-white py-2 rounded-lg font-semibold hover:opacity-90 transition cursor-pointer"
         >
           Iniciar sesión
         </button>
