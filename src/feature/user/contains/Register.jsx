@@ -85,7 +85,7 @@ export default function RegisterPage() {
 
     if (!validateAge(year, month, day)) return setError('Debes tener al menos 18 años.');
 
-    alert('Formulario válido. Puedes enviar los datos al backend.');
+    alert('Formulario válido.');
   };
 
   return (
