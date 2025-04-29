@@ -1,5 +1,2 @@
 @import "tailwindcss";
 
-.titulo {
-  @apply text-9xl font-bold underline bg-blue-700 text-white hover:bg-red-500;
-}
