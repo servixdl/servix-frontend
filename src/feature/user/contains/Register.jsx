@@ -1,32 +1,48 @@
-import { useState } from 'react';
-import InputField from '../../../utils/InputField';
-import SelectField from '../../../utils/SelectField';
+import { useState } from "react";
+import InputField from "../../../utils/InputField";
+import SelectField from "../../../utils/SelectField";
+import { useRut } from "../../../hooks/useRut";
 
 // Lista de años desde 1930 hasta el año actual
 const currentYear = new Date().getFullYear();
-const years = Array.from({ length: currentYear - 1930 + 1 }, (_, i) => 1930 + i);
+const years = Array.from(
+  { length: currentYear - 1930 + 1 },
+  (_, i) => 1930 + i
+);
+const emailFormat = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
 
 export default function RegisterPage() {
   const [form, setForm] = useState({
-    rut: '',
-    name: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-    day: '',
-    month: '',
-    year: '',
+    rut: "",
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    day: "",
+    month: "",
+    year: "",
   });
 
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
+  // Desestructuramos funciones y estado desde el hook useRut
+  const { formatRut, isValidRut, rutError } = useRut();
 
   /**
    * Actualiza los valores del formulario y limpia errores.
    * @param {Object} e - Evento del input.
    */
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-    setError('');
+    const { name, value } = e.target;
+
+    if (name === "rut") {
+      const formattedRut = formatRut(value);
+      setForm({ ...form, rut: formattedRut });
+      isValidRut(formattedRut); // Valida al escribir
+    } else {
+      setForm({ ...form, [name]: value });
+    }
+
+    setError("");
   };
 
   /**
@@ -43,7 +59,10 @@ export default function RegisterPage() {
     const monthDiff = today.getMonth() - birth.getMonth();
     const dayDiff = today.getDate() - birth.getDate();
 
-    return age > 18 || (age === 18 && (monthDiff > 0 || (monthDiff === 0 && dayDiff >= 0)));
+    return (
+      age > 18 ||
+      (age === 18 && (monthDiff > 0 || (monthDiff === 0 && dayDiff >= 0)))
+    );
   };
 
   /**
@@ -53,14 +72,14 @@ export default function RegisterPage() {
    */
   const validatePassword = (password) => {
     if (password.length < 6 || password.length > 10) {
-      return 'La contraseña debe tener entre 6 y 10 caracteres.';
+      return "La contraseña debe tener entre 6 y 10 caracteres.";
     }
     if (!/^[a-zA-Z0-9.]+$/.test(password)) {
-      return 'La contraseña solo puede contener letras, números y puntos.';
+      return "La contraseña solo puede contener letras, números y puntos.";
     }
     const uppercaseCount = (password.match(/[A-Z]/g) || []).length;
     if (uppercaseCount > 2) {
-      return 'La contraseña solo puede contener hasta 2 letras mayúsculas.';
+      return "La contraseña solo puede contener hasta 2 letras mayúsculas.";
     }
     return null;
   };
@@ -71,27 +90,47 @@ export default function RegisterPage() {
    */
   const handleSubmit = (e) => {
     e.preventDefault();
-    const { rut, name, email, password, confirmPassword, day, month, year } = form;
+    const { rut, name, email, password, confirmPassword, day, month, year } =
+      form;
 
-    if (!rut || !name || !email || !password || !confirmPassword || !day || !month || !year) {
-      return setError('Todos los campos son obligatorios.');
+    if (
+      !rut ||
+      !name ||
+      !email ||
+      !password ||
+      !confirmPassword ||
+      !day ||
+      !month ||
+      !year
+    ) {
+      return setError("Todos los campos son obligatorios.");
+    }
+    if (!emailFormat.test(form.email)) {
+      return setError("El formato del email no es correcto!");
     }
 
-    if (rut.length > 9) return setError('El RUT no puede tener más de 9 caracteres.');
-    if (password !== confirmPassword) return setError('Las contraseñas no coinciden.');
+
+    if (password !== confirmPassword)
+      return setError("Las contraseñas no coinciden.");
 
     const passwordError = validatePassword(password);
     if (passwordError) return setError(passwordError);
 
-    if (!validateAge(year, month, day)) return setError('Debes tener al menos 18 años.');
+    if (!validateAge(year, month, day))
+      return setError("Debes tener al menos 18 años.");
 
-    alert('Formulario válido.');
+    alert("Formulario válido.");
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-gray-100 flex items-center justify-center">
-      <form onSubmit={handleSubmit} className="w-full max-w-sm bg-white p-8 rounded-xl shadow-md">
-        <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">Registro</h2>
+      <form
+        onSubmit={handleSubmit}
+        className="w-full max-w-sm bg-white p-8 rounded-xl shadow-md"
+      >
+        <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">
+          Registro
+        </h2>
 
         {error && (
           <div className="mb-4 p-3 rounded-md bg-red-100 text-red-700 text-sm border border-red-300">
@@ -107,6 +146,7 @@ export default function RegisterPage() {
           value={form.rut}
           onChange={handleChange}
         />
+        {rutError && <p className="text-red-500 text-sm mt-1">{rutError}</p>}
 
         <InputField
           label="Nombre"
@@ -118,7 +158,9 @@ export default function RegisterPage() {
         />
 
         <div className="mb-4">
-          <label className="text-sm font-medium text-gray-700 block mb-1">Fecha de nacimiento</label>
+          <label className="text-sm font-medium text-gray-700 block mb-1">
+            Fecha de nacimiento
+          </label>
           <div className="flex gap-2">
             <SelectField
               name="day"
