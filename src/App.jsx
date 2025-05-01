@@ -6,6 +6,7 @@ import LoginPage from "./feature/user/contains/Login.jsx";
 import RegisterPage from "./feature/user/contains/Register.jsx";
 import Navbar from "./components/Navbar.jsx";
 import Footer from "./components/Footer.jsx";
+import NotFound from "./feature/notFound/NotFound.jsx";
 
 function App() {
   return (
@@ -18,7 +19,7 @@ function App() {
           <Route path="/allservice" element={<AllServicePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
-          <Route path="*" element={<h1>404 Not Found</h1>} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
         <Footer />
       </>
