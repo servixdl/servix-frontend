@@ -1,2 +1,128 @@
 @import "tailwindcss";
 
+:root {
+  --radius: 0.4rem;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.141 0.005 285.823);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.141 0.005 285.823);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.141 0.005 285.823);
+  --primary: oklch(0.645 0.246 16.439);
+  --primary-foreground: oklch(0.969 0.015 12.422);
+  --secondary: oklch(0.967 0.001 286.375);
+  --secondary-foreground: oklch(0.21 0.006 285.885);
+  --muted: oklch(0.967 0.001 286.375);
+  --muted-foreground: oklch(0.552 0.016 285.938);
+  --accent: oklch(0.967 0.001 286.375);
+  --accent-foreground: oklch(0.21 0.006 285.885);
+}
+
+/* Utilidades globales */
+
+.bg-background {
+  background-color: var(--background);
+}
+
+.hero-section {
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+.hero-paragraph {
+  color: var(--muted-foreground);
+}
+
+.text-highlight {
+  color: var(--primary);
+  font-weight: bold;
+}
+
+/* ---------------------------- */
+/* Botones con variantes */
+/* ---------------------------- */
+
+/* Botón primario */
+.btn-primary {
+  @apply px-5 py-2.5 text-sm font-medium text-center focus:ring-4 focus:outline-none transition;
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+  border-radius: var(--radius);
+}
+.btn-primary:hover {
+  filter: brightness(0.95);
+}
+.btn-primary:focus {
+  box-shadow: 0 0 0 4px var(--primary-foreground);
+}
+
+/* Botón secundario */
+.btn-secondary {
+  @apply px-5 py-2.5 text-sm font-medium text-center focus:ring-4 focus:outline-none transition;
+  background-color: var(--secondary);
+  color: var(--secondary-foreground);
+  border-radius: var(--radius);
+}
+.btn-secondary:hover {
+  filter: brightness(0.95);
+}
+.btn-secondary:focus {
+  box-shadow: 0 0 0 4px var(--secondary-foreground);
+}
+
+/* Botón muted */
+.btn-muted {
+  @apply px-5 py-2.5 text-sm font-medium text-center focus:ring-4 focus:outline-none transition;
+  background-color: var(--muted);
+  color: var(--muted-foreground);
+  border-radius: var(--radius);
+}
+.btn-muted:hover {
+  filter: brightness(0.95);
+}
+.btn-muted:focus {
+  box-shadow: 0 0 0 4px var(--muted-foreground);
+}
+
+/* Botón accent */
+.btn-accent {
+  @apply px-5 py-2.5 text-sm font-medium text-center focus:ring-4 focus:outline-none transition;
+  background-color: var(--accent);
+  color: var(--accent-foreground);
+  border-radius: var(--radius);
+}
+.btn-accent:hover {
+  filter: brightness(0.95);
+}
+.btn-accent:focus {
+  box-shadow: 0 0 0 4px var(--accent-foreground);
+}
+
+/* Botón outline */
+.btn-outline {
+  @apply px-5 py-2.5 text-sm font-medium text-center border focus:ring-4 focus:outline-none transition;
+  background-color: transparent;
+  border: 1px solid var(--foreground);
+  color: var(--foreground);
+  border-radius: var(--radius);
+}
+.btn-outline:hover {
+  background-color: var(--foreground);
+  color: var(--background);
+}
+.btn-outline:focus {
+  box-shadow: 0 0 0 4px var(--foreground);
+}
+
+/* Carousel services */
+
+.embla {
+  overflow: hidden;
+}
+.embla__container {
+  display: flex;
+}
+.embla__slide {
+  min-width: 0;
+  transition: opacity 0.2s ease-in-out;
+}

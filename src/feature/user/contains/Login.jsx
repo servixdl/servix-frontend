@@ -6,7 +6,6 @@ import "react-toastify/dist/ReactToastify.css";
 
 const emailFormat = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
 
-
 export default function LoginPage() {
   const [form, setForm] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
@@ -44,8 +43,6 @@ export default function LoginPage() {
 
     const passwordError = validatePassword(password);
     if (passwordError) return setError(passwordError);
-
-  
 
     // Solo toastify en éxito
     toast.success("¡Inicio de sesión exitoso! (Simulado)");
@@ -85,10 +82,7 @@ export default function LoginPage() {
           onChange={handleChange}
         />
 
-        <button
-          type="submit"
-          className="w-full mt-4 bg-black text-white py-2 rounded-lg font-semibold hover:opacity-90 transition cursor-pointer"
-        >
+        <button type="submit" className="w-full mt-4 btn-primary">
           Iniciar sesión
         </button>
       </form>

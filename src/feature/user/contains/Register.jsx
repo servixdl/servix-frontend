@@ -112,7 +112,6 @@ export default function RegisterPage() {
       return setError("El formato del email no es correcto!");
     }
 
-
     if (password !== confirmPassword)
       return setError("Las contraseñas no coinciden.");
 
@@ -218,10 +217,7 @@ export default function RegisterPage() {
           onChange={handleChange}
         />
 
-        <button
-          type="submit"
-          className="w-full mt-4 bg-black text-white py-2 rounded-lg font-semibold hover:opacity-90 transition cursor-pointer"
-        >
+        <button type="submit" className="btn-primary w-full mt-4">
           Registrarme
         </button>
       </form>
