@@ -2,6 +2,9 @@ import { useState } from "react";
 import InputField from "../../../utils/InputField";
 import SelectField from "../../../utils/SelectField";
 import { useRut } from "../../../hooks/useRut";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+// import {ENDPOINT} from "../../../config/constans.js" futuro endepoint
 
 // Lista de años desde 1930 hasta el año actual
 const currentYear = new Date().getFullYear();
@@ -118,8 +121,10 @@ export default function RegisterPage() {
     if (!validateAge(year, month, day))
       return setError("Debes tener al menos 18 años.");
 
-    alert("Formulario válido.");
+    toast.success("¡Registro exitoso! (Simulado)");
+   
   };
+
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-gray-100 flex items-center justify-center">
@@ -216,6 +221,7 @@ export default function RegisterPage() {
           Registrarme
         </button>
       </form>
+      <ToastContainer />
     </div>
   );
 }
