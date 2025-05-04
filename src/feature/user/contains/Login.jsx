@@ -3,12 +3,15 @@ import { useState } from "react";
 import InputField from "../../../utils/InputField";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
+import { userCreate } from "../../../config/users.js";
 
 const emailFormat = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
 
 export default function LoginPage() {
   const [form, setForm] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -32,20 +35,22 @@ export default function LoginPage() {
   const handleSubmit = (e) => {
     e.preventDefault();
     const { email, password } = form;
+    
+    const userFound = userCreate.find((u) => u.email === email);
 
-    if (!email || !password) {
-      return setError("Todos los campos son obligatorios.");
+    if (!userFound) {
+      return toast.error('Este usuario no está registrado.');
     }
-
-    if (!emailFormat.test(email)) {
-      return setError("El formato del email no es correcto.");
+  
+    if (userFound.password !== password) {
+      return toast.error('Contraseña incorrecta o email incorrecto!.');
     }
-
-    const passwordError = validatePassword(password);
-    if (passwordError) return setError(passwordError);
-
-    // Solo toastify en éxito
-    toast.success("¡Inicio de sesión exitoso! (Simulado)");
+  
+    // Si pasa ambas validaciones:
+    toast.success('Inicio de sesión exitoso. Redirigiendo al perfil...');
+    setTimeout(() => {
+      navigate('/perfil');
+    }, 2500);
   };
 
   return (
