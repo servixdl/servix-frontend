@@ -1,5 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import ApiService from "../api/ApiService";
 
 export default function ServicePage() {
@@ -9,7 +10,7 @@ export default function ServicePage() {
 
   useEffect(() => {
     const fetchService = async () => {
-      const response = await ApiService.getById();
+      const response = await ApiService.getById(id);
       setService(response);
     };
 
@@ -19,10 +20,10 @@ export default function ServicePage() {
   if (!service) return <p>Cargando...</p>;
   return (
     <div>
-      <h1>Service Page</h1>
+     
 
       <div className="flex flex-col md:flex-row gap-2">
-        <div className="md:w-1/2 w-full">
+        <div className="md:w-1/2 w-full justify-center items-center flex">
           <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUid_Q7Swsoed22nJxVgvDvHeKGKrNy6mqmgJTQCikFPfcy-VG3MolGdZbWeV7TvPwDI8&usqp=CAU" alt="" />
         </div>
         

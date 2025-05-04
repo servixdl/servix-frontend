@@ -11,8 +11,8 @@ const ApiService = {
         const data = await response.json();
         return data
     },
-    getById: async () => {
-        const response = await fetch(BASE_URL+'/'+2);
+    getById: async (id) => {
+        const response = await fetch(BASE_URL+'/'+id);
         const data = await response.json();
         return data;
 }

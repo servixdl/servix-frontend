@@ -1,6 +1,7 @@
 import SearchService from "../components/search";
 import CardService from "../components/cardService";
 import useServices from "../hooks/UseService";
+import { Link } from "react-router-dom";
 export default function AllServicePage() {
   const {services,search,loading} =useServices();
  
@@ -12,7 +13,8 @@ export default function AllServicePage() {
       </div>
 
       <div className="w-full md:w-3/4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {services.map((service,indice)=>
+        {services.map((service)=> (
+          <Link to={'/service/'+service.id_servicio} key={service.id_servicio}>
         <CardService key={service.id_servicio} 
         service={{
           name: service.nombre,
@@ -20,8 +22,11 @@ export default function AllServicePage() {
           description: service.descripcion,
           id: service.id_servicio,
         }}
-        /> )}
+        /> 
+          </Link>
+        ))};
          </div>
+         
     </div>
   );
 }
