@@ -1,0 +1,47 @@
+[
+  {
+    "id_servicio": 1,
+    "nombre": "Electricista",
+    "precio": 25000,
+    "descripcion": "Reparaciones eléctricas y mantenimiento.",
+    "tipo_servicio_id": 2,
+    "usuario_id": 5,
+    "imagen": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT4s_-KLXK_hpAbwSs2XXex2u8EFzeSMGWizg&s"
+  },
+  {
+    "id_servicio": 2,
+    "nombre": "Plomero",
+    "precio": 30000,
+    "descripcion": "Servicios de plomería para el hogar.",
+    "tipo_servicio_id": 3,
+    "usuario_id": 6,
+    "imagen": "https://cloudfront-us-east-1.images.arcpublishing.com/infobae/PI4EBZWKDJEOPIZWI6BOOBV4AA.jpg"
+  },
+  {
+    "id_servicio": 3,
+    "nombre": "Jardinero",
+    "precio": 20000,
+    "descripcion": "Mantenimiento de jardines y áreas verdes.",
+    "tipo_servicio_id": 4,
+    "usuario_id": 7,
+    "imagen": "https://leccionachile.b-cdn.net/wp-content/uploads/2020/08/curso-online-jardinero-profesional_l_primaria_1.jpg"
+  },
+  {
+    "id_servicio": 4,
+    "nombre": "Pintor",
+    "precio": 40000,
+    "descripcion": "Pintura de interiores y exteriores.",
+    "tipo_servicio_id": 5,
+    "usuario_id": 8,
+    "imagen": "https://pinturashipopotamo.es/wp-content/uploads/2020/01/como-elegir-un-buen-pintor.jpg"
+  },
+  {
+    "id_servicio": 5,
+    "nombre": "Técnico en telecomunicaciones",
+    "precio": 35000,
+    "descripcion": "Instalación y mantenimiento de redes.",
+    "tipo_servicio_id": 6,
+    "usuario_id": 9,
+    "imagen": "https://cypes.grupoeurohispana.com/img/profesion/1796/recurso-principal-7372459.jpg"
+  }
+]

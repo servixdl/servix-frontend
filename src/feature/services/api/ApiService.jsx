@@ -1,20 +1,19 @@
-const BASE_URL = "http://localhost:3000/services";
+import mockServices from "../mock/services.json";
 
 const ApiService = {
-    getAll :async  () =>{
-    const response = await fetch(BASE_URL);
-    const data = await response.json();
-    return data;
-},
-    getByName: async (keyword) =>{
-        const response = await fetch(BASE_URL+'/name/'+keyword)
-        const data = await response.json();
-        return data
-    },
-    getById: async (id) => {
-        const response = await fetch(BASE_URL+'/'+id);
-        const data = await response.json();
-        return data;
-}
-}
-export default ApiService
+  getAll: async () => {
+    return mockServices;
+  },
+
+  getByName: async (keyword) => {
+    return mockServices.filter((s) =>
+      s.nombre.toLowerCase().includes(keyword.toLowerCase())
+    );
+  },
+
+  getById: async (id) => {
+    return mockServices.find((s) => s.id_servicio === Number(id));
+  },
+};
+
+export default ApiService;
