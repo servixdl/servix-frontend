@@ -1,18 +1,24 @@
-import mockServices from "../mock/services.json";
+const BASE_URL = "http://localhost:3000/services";
 
 const ApiService = {
   getAll: async () => {
-    return mockServices;
-  },
-
-  getByName: async (keyword) => {
-    return mockServices.filter((s) =>
-      s.nombre.toLowerCase().includes(keyword.toLowerCase())
-    );
+    const res = await fetch(`${BASE_URL}/servicios`);
+    if (!res.ok) throw new Error("Error al obtener servicios");
+    return await res.json();
   },
 
   getById: async (id) => {
-    return mockServices.find((s) => s.id_servicio === Number(id));
+    const res = await fetch(`${BASE_URL}/servicios/${id}`);
+    if (!res.ok) throw new Error("Error al obtener el servicio");
+    return await res.json();
+  },
+
+  getByName: async (nombre) => {
+    const res = await fetch(
+      `${BASE_URL}/servicios?nombre=${encodeURIComponent(nombre)}`
+    );
+    if (!res.ok) throw new Error("Error en la búsqueda");
+    return await res.json();
   },
 };
 

@@ -6,19 +6,25 @@ const useServices = () => {
   const [loading, setLoading] = useState(true);
 
   const fetchAll = async () => {
-    setLoading(true);
-    const response = await fetch("/src/feature/services/mock/services.json");
-    const data = await response.json();
-    setAllServices(data);
-    setServices(data);
-    setLoading(false);
+    try {
+      setLoading(true);
+      const response = await fetch("http://localhost:3000/services");
+      if (!response.ok) throw new Error("Error al obtener servicios");
+      const data = await response.json();
+      setAllServices(data);
+      setServices(data);
+    } catch (error) {
+      console.error("Error en fetchAll:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
     fetchAll();
   }, []);
 
-  const search = async (keyword) => {
+  const search = (keyword) => {
     setLoading(true);
     if (!keyword.trim()) {
       setServices(allServices);
