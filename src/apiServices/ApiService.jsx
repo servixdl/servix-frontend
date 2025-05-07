@@ -1,5 +1,5 @@
-import mockServices from "../mock/services.json";
 
+import mockServices from "../feature/services/mock/services.json";
 const ApiService = {
   getAll: async () => {
     return mockServices;
