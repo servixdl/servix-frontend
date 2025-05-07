@@ -1,9 +1,13 @@
 import { useState } from "react";
 import InputField from "../../../utils/InputField";
 import SelectField from "../../../utils/SelectField";
+ 
 import { useRut } from "../../../hooks/useRut";
 import { ToastContainer, toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
+import { userCreate } from "../../../config/users.js";
+
 // import {ENDPOINT} from "../../../config/constans.js" futuro endepoint
 
 // Lista de años desde 1930 hasta el año actual
@@ -15,6 +19,7 @@ const years = Array.from(
 const emailFormat = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
 
 export default function RegisterPage() {
+  const navigate = useNavigate();
   const [form, setForm] = useState({
     rut: "",
     name: "",
@@ -91,7 +96,7 @@ export default function RegisterPage() {
    * Maneja el envío del formulario y valida los datos.
    * @param {Object} e - Evento del formulario.
    */
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const { rut, name, email, password, confirmPassword, day, month, year } =
       form;
@@ -111,6 +116,8 @@ export default function RegisterPage() {
     if (!emailFormat.test(form.email)) {
       return setError("El formato del email no es correcto!");
     }
+     
+    
 
     if (password !== confirmPassword)
       return setError("Las contraseñas no coinciden.");
@@ -121,10 +128,39 @@ export default function RegisterPage() {
     if (!validateAge(year, month, day))
       return setError("Debes tener al menos 18 años.");
 
-    toast.success("¡Registro exitoso! (Simulado)");
-   
-  };
+    const newUser = {
+      rut,
+      name,
+      email,
+      password,
+      birthdate: `${year}-${month}-${day}`,
+    };
 
+    // Validar si ya existe el usuario por email o rut
+    const exists = userCreate.find(
+      (user) => user.email === email || user.rut === rut
+    );
+    if (exists) {
+      return toast.error(
+        "Este usuario ya está registrado con ese email o RUT."
+      );
+    }
+
+    try {
+      userCreate.push(newUser);
+
+      localStorage.setItem("users", JSON.stringify(userCreate));
+
+      toast.success("Usuario registrado correctamente.");
+      navigate("/login");
+
+      setTimeout(() => {
+        navigate("/login");
+      }, 2000);
+    } catch (err) {
+      toast.error("Hubo un error al registrar. Intenta nuevamente.");
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-gray-100 flex items-center justify-center">

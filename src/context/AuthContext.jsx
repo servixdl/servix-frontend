@@ -1,38 +1,32 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-// Creamos el contexto de autenticación
 const AuthContext = createContext();
 
-/**
- * Componente proveedor del contexto de autenticación.
- * Contiene estado global para el usuario y el token de sesión.
- */
 export const AuthProvider = ({ children }) => {
-  // Estado inicial con token recuperado de sessionStorage si existe
-  const [auth, setAuth] = useState({
-    user: null,
-    token: sessionStorage.getItem('token') || null,
-  });
+  const navigate = useNavigate();
+  const [user, setUser] = useState(null); 
 
-  // Función para iniciar sesión y guardar el token
-  const login = (userData, token) => {
-    sessionStorage.setItem('token', token);
-    setAuth({ user: userData, token });
+  const login = (email, password) => {
+  
+    if (email === "admin@correo.com" && password === "123456") {
+      setUser({ email });
+      navigate("/perfil");
+    } else {
+      alert("Credenciales inválidas");
+    }
   };
 
-  // Función para cerrar sesión y limpiar sesión
   const logout = () => {
-    sessionStorage.removeItem('token');
-    setAuth({ user: null, token: null });
+    setUser(null);
+    navigate("/login");
   };
 
-  // Proveemos el contexto a los componentes hijos
   return (
-    <AuthContext.Provider value={{ auth, login, logout }}>
+    <AuthContext.Provider value={{ user, login, logout, isAuthenticated: !!user }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
-// Hook personalizado para acceder fácilmente al contexto
 export const useAuth = () => useContext(AuthContext);

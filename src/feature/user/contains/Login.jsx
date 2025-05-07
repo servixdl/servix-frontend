@@ -3,49 +3,44 @@ import { useState } from "react";
 import InputField from "../../../utils/InputField";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useAuth } from "../../../context/AuthContext.jsx";
+import { userCreate } from "../../../config/users.js";
 
 const emailFormat = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
 
 export default function LoginPage() {
   const [form, setForm] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
+  const { login } = useAuth();
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
     setError("");
   };
 
-  const validatePassword = (password) => {
-    if (password.length < 6 || password.length > 10) {
-      return "La contraseña debe tener entre 6 y 10 caracteres.";
-    }
-    if (!/^[a-zA-Z0-9.]+$/.test(password)) {
-      return "Solo se permiten letras, números y puntos.";
-    }
-    const uppercaseCount = (password.match(/[A-Z]/g) || []).length;
-    if (uppercaseCount > 2) {
-      return "Máximo 2 letras mayúsculas.";
-    }
-    return null;
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
     const { email, password } = form;
 
-    if (!email || !password) {
-      return setError("Todos los campos son obligatorios.");
-    }
-
     if (!emailFormat.test(email)) {
-      return setError("El formato del email no es correcto.");
+      return toast.error("Formato de correo inválido.");
     }
 
-    const passwordError = validatePassword(password);
-    if (passwordError) return setError(passwordError);
+    const userFound = userCreate.find((u) => u.email === email);
 
-    // Solo toastify en éxito
-    toast.success("¡Inicio de sesión exitoso! (Simulado)");
+    if (!userFound) {
+      return toast.error("Este usuario no está registrado.");
+    }
+
+    if (userFound.password !== password) {
+      return toast.error("Contraseña incorrecta.");
+    }
+
+   
+    toast.success("Inicio de sesión exitoso. Redirigiendo...");
+    setTimeout(() => {
+      login(email, password);
+    }, 1500);
   };
 
   return (
