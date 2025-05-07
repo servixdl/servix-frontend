@@ -1,11 +1,13 @@
 import { useState } from "react";
 import InputField from "../../../utils/InputField";
 import SelectField from "../../../utils/SelectField";
+ 
 import { useRut } from "../../../hooks/useRut";
 import { ToastContainer, toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import { userCreate } from "../../../config/users.js";
+
 // import {ENDPOINT} from "../../../config/constans.js" futuro endepoint
 
 // Lista de años desde 1930 hasta el año actual
@@ -94,7 +96,7 @@ export default function RegisterPage() {
    * Maneja el envío del formulario y valida los datos.
    * @param {Object} e - Evento del formulario.
    */
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const { rut, name, email, password, confirmPassword, day, month, year } =
       form;
@@ -114,6 +116,8 @@ export default function RegisterPage() {
     if (!emailFormat.test(form.email)) {
       return setError("El formato del email no es correcto!");
     }
+     
+    
 
     if (password !== confirmPassword)
       return setError("Las contraseñas no coinciden.");
@@ -132,13 +136,14 @@ export default function RegisterPage() {
       birthdate: `${year}-${month}-${day}`,
     };
 
-  
     // Validar si ya existe el usuario por email o rut
     const exists = userCreate.find(
       (user) => user.email === email || user.rut === rut
     );
     if (exists) {
-      return toast.error("Este usuario ya está registrado con ese email o RUT.");
+      return toast.error(
+        "Este usuario ya está registrado con ese email o RUT."
+      );
     }
 
     try {

@@ -3,7 +3,7 @@ import { useState } from "react";
 import InputField from "../../../utils/InputField";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../../context/AuthContext.jsx";
 import { userCreate } from "../../../config/users.js";
 
 const emailFormat = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
@@ -11,46 +11,36 @@ const emailFormat = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
 export default function LoginPage() {
   const [form, setForm] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
-  const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
     setError("");
   };
 
-  const validatePassword = (password) => {
-    if (password.length < 6 || password.length > 10) {
-      return "La contraseña debe tener entre 6 y 10 caracteres.";
-    }
-    if (!/^[a-zA-Z0-9.]+$/.test(password)) {
-      return "Solo se permiten letras, números y puntos.";
-    }
-    const uppercaseCount = (password.match(/[A-Z]/g) || []).length;
-    if (uppercaseCount > 2) {
-      return "Máximo 2 letras mayúsculas.";
-    }
-    return null;
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
     const { email, password } = form;
-    
+
+    if (!emailFormat.test(email)) {
+      return toast.error("Formato de correo inválido.");
+    }
+
     const userFound = userCreate.find((u) => u.email === email);
 
     if (!userFound) {
-      return toast.error('Este usuario no está registrado.');
+      return toast.error("Este usuario no está registrado.");
     }
-  
+
     if (userFound.password !== password) {
-      return toast.error('Contraseña incorrecta o email incorrecto!.');
+      return toast.error("Contraseña incorrecta.");
     }
-  
-    // Si pasa ambas validaciones:
-    toast.success('Inicio de sesión exitoso. Redirigiendo al perfil...');
+
+   
+    toast.success("Inicio de sesión exitoso. Redirigiendo...");
     setTimeout(() => {
-      navigate('/perfil');
-    }, 2500);
+      login(email, password);
+    }, 1500);
   };
 
   return (
