@@ -1,19 +1,22 @@
-
 import mockServices from "../feature/services/mock/services.json";
+const BASE_URL = "http://localhost:3000/services";
+import axios from "axios";
+
 const ApiService = {
-  getAll: async () => {
-    return mockServices;
+  getAll :async  () =>{
+  const response = await fetch(BASE_URL);
+  const data = await response.data.json();
+  return data;
+},
+  getByName: async (keyword) =>{
+      const response = await axios.get(BASE_URL+'/name/'+keyword)
+      const data = await response.data.json();
+      return data
   },
-
-  getByName: async (keyword) => {
-    return mockServices.filter((s) =>
-      s.nombre.toLowerCase().includes(keyword.toLowerCase())
-    );
-  },
-
   getById: async (id) => {
-    return mockServices.find((s) => s.id_servicio === Number(id));
-  },
-};
-
-export default ApiService;
+      const response = await fetch(BASE_URL+'/'+id);
+      const data = await response.data.json();
+      return data;
+}
+}
+export default ApiService

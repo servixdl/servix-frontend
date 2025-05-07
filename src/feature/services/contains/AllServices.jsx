@@ -3,6 +3,7 @@ import SearchService from "../components/Search";
 import CardService from "../components/CardService";
 import useServices from "../hooks/UseService";
 import { Link } from "react-router-dom";
+import ApiService from "../../../apiServices/ApiService";
 
 export default function AllServicePage() {
   const {services,search,loading} =useServices();
