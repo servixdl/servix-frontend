@@ -1,24 +1,41 @@
-import { createContext, useContext, useState } from "react";
+// src/context/AuthContext.jsx
+import { createContext, useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { ENDPOINT } from "../config/constans.js";
+import { toast } from "react-toastify";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
-  const [user, setUser] = useState(null); 
+  const [user, setUser] = useState(null);
 
-  const login = (email, password) => {
-  
-    if (email === "admin@correo.com" && password === "123456") {
-      setUser({ email });
+  useEffect(() => {
+    const token = sessionStorage.getItem("token");
+    if (token) {
+      setUser({ token });
+    }
+  }, []);
+
+  const login = async (email, password) => {
+    try {
+      const res = await axios.post(ENDPOINT.login, { email, password });
+      const { token } = res.data;
+      sessionStorage.setItem("token", token);
+      setUser({ token });
+      toast.success("Inicio de sesión exitoso ✅");
       navigate("/perfil");
-    } else {
-      alert("Credenciales inválidas");
+    } catch (error) {
+      const msg = error?.response?.data?.message || "Credenciales inválidas";
+      toast.error(msg);
     }
   };
 
   const logout = () => {
+    sessionStorage.removeItem("token");
     setUser(null);
+    toast.info("Sesión cerrada correctamente");
     navigate("/login");
   };
 

@@ -4,7 +4,7 @@ import regionesData from "../../../Json/regiones-comunas.json";
 
 export default function PerfilUsuario() {
   const [nombre, setNombre] = useState("");
-  const [fechaNacimiento] = useState("1995-06-12");
+  const [fechaNacimiento] = useState("");
   const [edad, setEdad] = useState(null);
   const [ofrecerServicio, setOfrecerServicio] = useState(false);
   const [experiencia, setExperiencia] = useState("");
