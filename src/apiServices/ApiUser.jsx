@@ -1,7 +1,7 @@
 const BASE_URL = "http://localhost:3000/users";
 import axios from "axios";
 const token =sessionStorage.getItem('token')
-const header = `Bearer ${token}`
+const header = {headers:{Authorization: `Bearer ${token}`}}
 const ApiUser ={
     register:async(user)=>{
         const response = await axios.post(BASE_URL+'/register',user)
