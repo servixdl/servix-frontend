@@ -98,47 +98,49 @@ export default function RegisterPage() {
    */
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { rut, name, email, password, confirmPassword, day, month, year } =
-      form;
-
-    if (
-      !rut ||
-      !name ||
-      !email ||
-      !password ||
-      !confirmPassword ||
-      !day ||
-      !month ||
-      !year
-    ) {
+    const { rut, name, email, password, confirmPassword, day, month, year } = form;
+  
+    if (!rut || !name || !email || !password || !confirmPassword || !day || !month || !year) {
       return setError("Todos los campos son obligatorios.");
     }
-    if (!emailFormat.test(form.email)) {
+  
+    if (!emailFormat.test(email)) {
       return setError("El formato del email no es correcto!");
     }
-     
-    
-
-    if (password !== confirmPassword)
+  
+    if (password !== confirmPassword) {
       return setError("Las contraseñas no coinciden.");
-
+    }
+  
     const passwordError = validatePassword(password);
-    if (passwordError) return setError(passwordError);
-
-    if (!validateAge(year, month, day))
+    if (passwordError) {
+      return setError(passwordError);
+    }
+  
+    if (!validateAge(year, month, day)) {
       return setError("Debes tener al menos 18 años.");
-
-   
+    }
+  
+    const fecha_nacimiento = `${String(year).padStart(4, '0')}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+  
     try {
-      await axios.post(ENDPOINT.registrer, form);
+      await axios.post(ENDPOINT.registrer, {
+        rut: String(rut),
+        name: String(name),
+        email: String(email),
+        password: String(password),
+        fecha_nacimiento: String(fecha_nacimiento),
+      });
+  
       toast.success("Usuario registrado con éxito 😀");
       navigate("/login");
     } catch (error) {
       const msg = error?.response?.data?.message || "Error al registrar.";
       toast.error(`${msg} 🙁`);
-         
     }
   };
+  
+  
   
   useEffect(() => {
     if (window.sessionStorage.getItem('token')) {
