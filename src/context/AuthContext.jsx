@@ -1,8 +1,7 @@
-// src/context/AuthContext.jsx
-import { createContext, useContext, useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 
-import { ENDPOINT } from "../config/constans.js";
+import React, { createContext, useContext, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import PropTypes from "prop-types";
 import { toast } from "react-toastify";
 import ApiUser from "../apiServices/ApiUser.jsx";
 const AuthContext = createContext();
@@ -49,6 +48,11 @@ export const AuthProvider = ({ children }) => {
       {children}
     </AuthContext.Provider>
   );
+};
+
+
+AuthProvider.propTypes = {
+  children: PropTypes.node.isRequired,
 };
 
 export const useAuth = () => useContext(AuthContext);
