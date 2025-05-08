@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import ApiService from "../api/ApiService";
+import ApiService from "../../../apiServices/ApiService";
 
 export default function ServicePage() {
   const { id } = useParams();

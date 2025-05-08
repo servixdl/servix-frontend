@@ -3,7 +3,7 @@ import SearchService from "../components/Search";
 import CardService from "../components/CardService";
 import useServices from "../hooks/UseService";
 import { Link } from "react-router-dom";
-import ApiService from "../../../apiServices/ApiService";
+
 
 export default function AllServicePage() {
   const {services,search,loading} =useServices();
@@ -20,6 +20,7 @@ export default function AllServicePage() {
           <Link to={'/service/'+service.id_servicio} key={service.id_servicio}>
         <CardService key={service.id_servicio} 
         service={{
+          image:service.imagen, 
           name: service.nombre,
           price: service.precio,
           description: service.descripcion,

@@ -4,19 +4,16 @@ import axios from "axios";
 
 const ApiService = {
   getAll :async  () =>{
-  const response = await fetch(BASE_URL);
-  const data = await response.data.json();
-  return data;
+  const response = await axios.get(BASE_URL);
+  return response.data;
 },
   getByName: async (keyword) =>{
-      const response = await axios.get(BASE_URL+'/name/'+keyword)
-      const data = await response.data.json();
-      return data
+      const response = await axios.get(BASE_URL+'/name/'+keyword);
+      return response.data;
   },
   getById: async (id) => {
-      const response = await fetch(BASE_URL+'/'+id);
-      const data = await response.data.json();
-      return data;
+      const response = await axios.get(BASE_URL+'/'+id);
+      return response.data;
 }
 }
 export default ApiService
