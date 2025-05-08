@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Switch } from "@headlessui/react";
 import regionesData from "../../../Json/regiones-comunas.json";
-
+import React from 'react';
 export default function PerfilUsuario() {
   const [nombre, setNombre] = useState("");
   const [fechaNacimiento] = useState("");

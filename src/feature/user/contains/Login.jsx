@@ -1,4 +1,5 @@
 // src/pages/LoginPage.jsx
+import React from 'react';
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import InputField from "../../../utils/InputField";
