@@ -14,7 +14,7 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const { login } = useAuth();
   const location = useLocation();
-
+ 
   useEffect(() => {
     if (location.state?.error) {
       toast.error(location.state.error);
