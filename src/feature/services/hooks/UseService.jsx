@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import ApiService from "../../../apiServices/ApiService";
 
 const useServices = () => {
   const [allServices, setAllServices] = useState([]);
@@ -7,8 +8,7 @@ const useServices = () => {
 
   const fetchAll = async () => {
     setLoading(true);
-    const response = await fetch("/src/feature/services/mock/services.json");
-    const data = await response.json();
+    const data = await ApiService.getAll();
     setAllServices(data);
     setServices(data);
     setLoading(false);

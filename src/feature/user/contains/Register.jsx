@@ -1,12 +1,12 @@
+import {useEffect, useState } from "react";
 import React from 'react';
-import {useEffect, useState} from "react";
 import InputField from "../../../utils/InputField";
 import SelectField from "../../../utils/SelectField";
- 
 import { useRut } from "../../../hooks/useRut";
 import { ToastContainer, toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
+import axios from "axios";
 import {ENDPOINT} from "../../../config/constans.js" 
 
 // Lista de años desde 1930 hasta el año actual
