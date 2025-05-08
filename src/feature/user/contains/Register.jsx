@@ -1,8 +1,7 @@
-import React from 'react';
 import {useEffect, useState } from "react";
-import InputField from "../../../utils/InputField.jsx";
+import React from 'react';
+import InputField from "../../../utils/InputField";
 import SelectField from "../../../utils/SelectField";
- 
 import { useRut } from "../../../hooks/useRut";
 import { ToastContainer, toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
@@ -126,10 +125,11 @@ export default function RegisterPage() {
     try {
       await axios.post(ENDPOINT.registrer, {
         rut: String(rut),
-        name: String(name),
-        email: String(email),
-        password: String(password),
+        nombre: String(name),
         fecha_nacimiento: String(fecha_nacimiento),
+        correo: String(email),
+        contrasena: String(password)
+       
       });
   
       toast.success("Usuario registrado con éxito 😀");

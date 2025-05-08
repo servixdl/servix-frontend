@@ -2,10 +2,8 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
-import axios from "axios";
-import { ENDPOINT } from "../config/constans.js";
 import { toast } from "react-toastify";
-
+import ApiUser from "../apiServices/ApiUser.jsx";
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
@@ -19,15 +17,20 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  const login = async (email, password) => {
+  const login = async (correo, contrasena) => {
     try {
-      const res = await axios.post(ENDPOINT.login, { email, password });
-      const { token } = res.data;
-      sessionStorage.setItem("token", token);
-      setUser({ token });
-      toast.success("Inicio de sesión exitoso ✅");
-      navigate("/perfil");
-    } catch (error) {
+      const res = await ApiUser.login({ correo, contrasena });
+      console.log(res.token)
+      const token = res.token;
+      if (token) {
+        sessionStorage.setItem("token",token);
+        setUser({ token });
+        toast.success("Inicio de sesión exitoso ✅");
+        navigate("/perfil");
+      } else {
+        throw new Error("No se recibió token del servidor.");
+      }
+      } catch (error) {
       const msg = error?.response?.data?.message || "Credenciales inválidas";
       toast.error(msg);
     }

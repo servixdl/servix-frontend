@@ -1,7 +1,8 @@
+import React from 'react';
 import { useState, useEffect } from "react";
 import { Switch } from "@headlessui/react";
 import regionesData from "../../../Json/regiones-comunas.json";
-import React from "react";
+;
 import { ENDPOINT } from "../../../config/constans.js";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";

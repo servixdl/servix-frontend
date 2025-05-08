@@ -5,7 +5,7 @@ const CardService = ({ service }) => {
     <div className="bg-white rounded-xl shadow-sm hover:shadow-xl transition-shadow duration-300 p-5">
       <img
         className="rounded-xl shadow-md max-h-48 object-cover mb-4"
-        src={service.imagen}
+        src={service.image}
         alt="Imagen del servicio"
       />
       <h2 className="text-lg font-bold text-gray-800 mb-2">{service.name}</h2>
