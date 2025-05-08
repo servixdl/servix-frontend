@@ -1,11 +1,9 @@
 // src/pages/LoginPage.jsx
-import React from 'react';
 import { useState } from "react";
 import InputField from "../../../utils/InputField";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useAuth } from "../../../context/AuthContext.jsx";
-import { userCreate } from "../../../config/users.js";
 
 const emailFormat = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
 
@@ -13,6 +11,13 @@ export default function LoginPage() {
   const [form, setForm] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const { login } = useAuth();
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.state?.error) {
+      toast.error(location.state.error);
+    }
+  }, [location]);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -23,25 +28,15 @@ export default function LoginPage() {
     e.preventDefault();
     const { email, password } = form;
 
+    if (!email || !password) {
+      return toast.error("Todos los campos son obligatorios.");
+    }
+
     if (!emailFormat.test(email)) {
       return toast.error("Formato de correo inválido.");
     }
 
-    const userFound = userCreate.find((u) => u.email === email);
-
-    if (!userFound) {
-      return toast.error("Este usuario no está registrado.");
-    }
-
-    if (userFound.password !== password) {
-      return toast.error("Contraseña incorrecta.");
-    }
-
-   
-    toast.success("Inicio de sesión exitoso. Redirigiendo...");
-    setTimeout(() => {
-      login(email, password);
-    }, 1500);
+    login(email, password); 
   };
 
   return (
