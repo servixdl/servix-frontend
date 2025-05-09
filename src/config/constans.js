@@ -1,7 +1,7 @@
 export const URLBASE = 'http://localhost:3000'
 
 export const ENDPOINT = {
-  login: `${URLBASE}/login`,
-  registrer: `${URLBASE}/createUser`,
- 
+  login: `${URLBASE}/users/login`,
+  registrer: `${URLBASE}/users`,
+   users : `${URLBASE}/users`
 }

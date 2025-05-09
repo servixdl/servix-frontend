@@ -1,12 +1,25 @@
+import React from 'react';
 import { useState, useEffect } from "react";
 import { Switch } from "@headlessui/react";
 import regionesData from "../../../Json/regiones-comunas.json";
+<<<<<<< HEAD
 import { useAuth } from "../../../context/AuthContext.jsx";
 import React from 'react';
+=======
+;
+import { ENDPOINT } from "../../../config/constans.js";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
+>>>>>>> rama-Adam
 export default function PerfilUsuario() {
+  const navigate = useNavigate();
+
   const [nombre, setNombre] = useState("");
-  const [fechaNacimiento] = useState("");
+  const [rut, setRut] = useState("");
+  const [fechaNacimiento, setFechaNacimiento] = useState("");
   const [edad, setEdad] = useState(null);
+
   const [ofrecerServicio, setOfrecerServicio] = useState(false);
   const [experiencia, setExperiencia] = useState("");
   const [oficio, setOficio] = useState("");
@@ -16,26 +29,45 @@ export default function PerfilUsuario() {
   const [comuna, setComuna] = useState("");
   const [telefono, setTelefono] = useState("");
   const [vivienda, setVivienda] = useState("");
+<<<<<<< HEAD
   
+=======
+
+  const calcularEdad = (fecha) => {
+    if (!fecha) return null;
+    const hoy = new Date();
+    const nacimiento = new Date(fecha);
+    let edad = hoy.getFullYear() - nacimiento.getFullYear();
+    const mes = hoy.getMonth() - nacimiento.getMonth();
+    if (mes < 0 || (mes === 0 && hoy.getDate() < nacimiento.getDate())) {
+      edad--;
+    }
+    return edad;
+  };
+
+  const getUserData = async () => {
+    const token = sessionStorage.getItem("token");
+    if (!token) return navigate("/");
+
+    try {
+      const { data } = await axios.get(ENDPOINT.users, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      setNombre(data.nombre || "");
+      setRut(data.rut || "");
+      setFechaNacimiento(data.fechaNacimiento || "");
+      setEdad(calcularEdad(data.fechaNacimiento));
+    } catch (error) {
+      console.error(error?.response?.data || error.message);
+      sessionStorage.removeItem("token");
+      navigate("/");
+    }
+  };
+
+>>>>>>> rama-Adam
   useEffect(() => {
-    const obtenerNombre = async () => {
-      const nombreAPI = "Juan Pérez";
-      setNombre(nombreAPI);
-    };
-
-    const calcularEdad = () => {
-      const hoy = new Date();
-      const nacimiento = new Date(fechaNacimiento);
-      let age = hoy.getFullYear() - nacimiento.getFullYear();
-      const m = hoy.getMonth() - nacimiento.getMonth();
-      if (m < 0 || (m === 0 && hoy.getDate() < nacimiento.getDate())) {
-        age--;
-      }
-      setEdad(age);
-    };
-
-    obtenerNombre();
-    calcularEdad();
+    getUserData();
   }, []);
 
   const handleImageChange = (e) => {
@@ -49,10 +81,8 @@ export default function PerfilUsuario() {
     }
   };
 
-  // ← Acceso corregido al arreglo de regiones
-  const comunasDisponibles = regionesData.regiones.find(
-    (r) => r["región"].trim() === region
-  )?.comunas || [];
+  const comunasDisponibles =
+    regionesData.regiones.find((r) => r["región"].trim() === region)?.comunas || [];
 
   return (
     <div className="min-h-screen bg-gray-100 flex justify-center items-center p-4">
@@ -72,16 +102,25 @@ export default function PerfilUsuario() {
         </div>
 
         <div className="space-y-3">
+          {/* Nombre */}
           <div>
             <label className="block text-sm font-medium text-gray-700">Nombre</label>
             <p className="text-gray-900 font-semibold">{nombre}</p>
           </div>
 
+          {/* Rut */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">Edad</label>
-            <p className="text-gray-900 font-semibold">{edad} años</p>
+            <label className="block text-sm font-medium text-gray-700">RUT</label>
+            <p className="text-gray-900 font-semibold">{rut}</p>
           </div>
 
+          {/* Edad (calculada) */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Edad</label>
+            <p className="text-gray-900 font-semibold">{edad ? `${edad} años` : "Sin datos"}</p>
+          </div>
+
+       
           <div>
             <label className="block text-sm font-medium text-gray-700">Dirección</label>
             <input
@@ -92,7 +131,6 @@ export default function PerfilUsuario() {
             />
           </div>
 
-          {/* Región */}
           <div>
             <label className="block text-sm font-medium text-gray-700">Región</label>
             <select
@@ -115,7 +153,6 @@ export default function PerfilUsuario() {
             </select>
           </div>
 
-          {/* Comuna */}
           <div>
             <label className="block text-sm font-medium text-gray-700">Comuna</label>
             <select
@@ -133,7 +170,6 @@ export default function PerfilUsuario() {
             </select>
           </div>
 
-          {/* Teléfono */}
           <div>
             <label className="block text-sm font-medium text-gray-700">Teléfono</label>
             <input
@@ -145,7 +181,6 @@ export default function PerfilUsuario() {
             />
           </div>
 
-          {/* Vivienda */}
           <div>
             <label className="block text-sm font-medium text-gray-700">Tipo de vivienda</label>
             <select
@@ -159,7 +194,6 @@ export default function PerfilUsuario() {
             </select>
           </div>
 
-          {/* Switch ofrecer servicio */}
           <div className="flex items-center justify-between">
             <label className="text-sm font-medium text-gray-700">Ofrecer servicio</label>
             <Switch
@@ -177,7 +211,6 @@ export default function PerfilUsuario() {
             </Switch>
           </div>
 
-          {/* Campos adicionales */}
           {ofrecerServicio && (
             <>
               <div>
@@ -200,12 +233,6 @@ export default function PerfilUsuario() {
                   value={experiencia}
                   onChange={(e) => setExperiencia(e.target.value)}
                 />
-              </div>
-
-              <div className="flex justify-end gap-2 mt-2">
-                <button className="bg-yellow-400 text-white px-4 py-1 rounded hover:opacity-90">Editar</button>
-                <button className="bg-red-500 text-white px-4 py-1 rounded hover:opacity-90">Borrar</button>
-                <button className="bg-green-600 text-white px-4 py-1 rounded hover:opacity-90">Actualizar</button>
               </div>
             </>
           )}

@@ -8,7 +8,9 @@ const ApiUser ={
         return response.data;
     },
     login:async(user)=>{
-        const response = await axios.post(BASE_URL+'login',user)
+        console.log(user)
+        const response = await axios.post(BASE_URL+'/login',user)
+        console.log(response)
         return response.data
     },
     getById:async(id)=>{
