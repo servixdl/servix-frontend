@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Switch } from "@headlessui/react";
 import regionesData from "../../../Json/regiones-comunas.json";
+import { useAuth } from "../../../context/AuthContext.jsx";
 import React from 'react';
 export default function PerfilUsuario() {
   const [nombre, setNombre] = useState("");
@@ -15,7 +16,7 @@ export default function PerfilUsuario() {
   const [comuna, setComuna] = useState("");
   const [telefono, setTelefono] = useState("");
   const [vivienda, setVivienda] = useState("");
-
+  
   useEffect(() => {
     const obtenerNombre = async () => {
       const nombreAPI = "Juan Pérez";
