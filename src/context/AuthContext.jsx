@@ -4,12 +4,13 @@ import PropTypes from "prop-types";
 import { toast } from "react-toastify";
 import ApiUser from "../apiServices/ApiUser.jsx";
 import {jwtDecode} from "jwt-decode"; // Librería para decodificar JWT
-
+import { TokenContext } from "./tokenContext.jsx";
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
+  const {setToken} = useContext(TokenContext);
 
   // Al cargar la app, intenta restaurar sesión desde sessionStorage
   useEffect(() => {
@@ -28,6 +29,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const res = await ApiUser.login({ correo, contrasena });
       const token = res.token;
+      setToken(true)
 
       if (!token) throw new Error("No se recibió token del servidor.");
 
@@ -58,6 +60,7 @@ export const AuthProvider = ({ children }) => {
   // Cierra sesión: limpia almacenamiento y contexto
   const logout = () => {
     sessionStorage.clear();
+    setToken(false)
     setUser(null);
     toast.info("Sesión cerrada correctamente");
     navigate("/login");
