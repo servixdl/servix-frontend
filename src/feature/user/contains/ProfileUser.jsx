@@ -1,42 +1,30 @@
-import { useEffect, useState } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import { ENDPOINT } from '../../../config/constans';
-import React from 'react';
-import { useState, useEffect } from "react";
+import { useAuth } from "../../../context/AuthContext";
+import React, { useState, useEffect, useRef } from "react";
+import { UserCircleIcon } from "@heroicons/react/24/solid";
 import { Switch } from "@headlessui/react";
 import regionesData from "../../../Json/regiones-comunas.json";
-<<<<<<< HEAD
-import { useAuth } from "../../../context/AuthContext.jsx";
-import React from 'react';
-=======
-;
-import { ENDPOINT } from "../../../config/constans.js";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import { FaUserCircle } from 'react-icons/fa';
-import regionesData from '../../../Json/regiones-comunas.json';
-import { Switch } from '@headlessui/react';
+import { toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
->>>>>>> rama-Adam
 export default function PerfilUsuario() {
-export default function Profile() {
-  const navigate = useNavigate();
-  const [userData, setUserData] = useState(null);
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [hasImage, setHasImage] = useState(false);
+  const { user } = useAuth();
 
   const [direccion, setDireccion] = useState("");
-  const [region, setRegion] = useState("");
-  const [comuna, setComuna] = useState("");
+  const [regionSeleccionada, setRegionSeleccionada] = useState("");
+  const [comunas, setComunas] = useState([]);
+  const [comunaSeleccionada, setComunaSeleccionada] = useState("");
   const [telefono, setTelefono] = useState("");
-  const [vivienda, setVivienda] = useState("");
-<<<<<<< HEAD
-  
-=======
+  const [imagen, setImagen] = useState(null);
+  const [bloqueado, setBloqueado] = useState(false);
+  const [enviando, setEnviando] = useState(false);
   const [ofrecerServicio, setOfrecerServicio] = useState(false);
   const [oficio, setOficio] = useState("");
   const [experiencia, setExperiencia] = useState("");
+
+  const inputRef = useRef();
+  const direccionRef = useRef();
+
+  const regiones = regionesData.regiones || [];
 
   const calcularEdad = (fechaNacimiento) => {
     const hoy = new Date();
@@ -49,221 +37,214 @@ export default function Profile() {
     return edad;
   };
 
-  const obtenerPrimerNombre = (nombreCompleto) => {
-    return nombreCompleto.split(' ')[0];
-  };
+  const edad = calcularEdad(user?.fecha_nacimiento);
+  const primerNombre = user?.nombre?.split(" ")[0];
 
 >>>>>>> rama-Adam
   useEffect(() => {
-    const token = sessionStorage.getItem('token');
-    if (!token) {
-      navigate('/login');
-      return;
-    }
+    const region = regiones.find((r) => r["región"]?.trim() === regionSeleccionada.trim());
+    setComunas(region ? region.comunas : []);
+  }, [regionSeleccionada]);
 
-    axios.get(ENDPOINT.perfil, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    })
-      .then(res => {
-        const data = Array.isArray(res.data) && res.data.length > 0 ? res.data[0] : null;
-        if (!data) throw new Error('No se encontró información del usuario.');
-        const edad = calcularEdad(data.fecha_nacimiento);
-        setUserData({ ...data, edad });
-        setHasImage(!!data.imagen);
-      })
-      .catch((err) => {
-        console.error("Error al obtener perfil:", err);
-        sessionStorage.removeItem('token');
-        navigate('/login');
-      });
-  }, []);
-
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    setSelectedFile(file);
-
-    if (file) {
-      const token = sessionStorage.getItem('token');
-      const formData = new FormData();
-      formData.append('imagen', file);
-
-      axios.post(ENDPOINT.perfil, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer ${token}`
-        }
-      })
-        .then(() => {
-          alert('Imagen actualizada con éxito');
-          setSelectedFile(null);
-          window.location.reload();
-        })
-        .catch((err) => {
-          console.error('Error al subir la imagen:', err);
-          alert('Hubo un error al subir la imagen');
-        });
+  const handleImageClick = () => {
+    if (imagen) {
+      handleRemoveImage();
+    } else {
+      inputRef.current.click();
     }
   };
 
-  const comunasDisponibles =
-    regionesData.regiones.find((r) => r["región"].trim() === region)?.comunas || [];
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file && file.type.startsWith("image/")) {
+      setImagen(file);
+    } else {
+      toast.error("Solo se permiten archivos de imagen.");
+      inputRef.current.value = null;
+    }
+  };
 
-  if (!userData) return <p className="text-center mt-10 text-gray-600">Cargando perfil...</p>;
+  const handleRemoveImage = () => {
+    setImagen(null);
+    inputRef.current.value = null;
+  };
+
+  const handleTelefonoChange = (e) => {
+    const valor = e.target.value;
+    const soloNumeros = valor.replace(/\D/g, "");
+    setTelefono(soloNumeros);
+  };
+
+  const camposCompletos = direccion && regionSeleccionada && comunaSeleccionada && telefono;
+
+  const handleSubmit = () => {
+    if (!camposCompletos) {
+      toast.warning("Debes llenar todos los campos");
+      return;
+    }
+    setEnviando(true);
+    setTimeout(() => {
+      setEnviando(false);
+      setBloqueado(true);
+    }, 2000);
+  };
+
+  const handleEditar = () => {
+    setBloqueado(false);
+    setTimeout(() => direccionRef.current?.focus(), 100);
+  };
 
   return (
-    <div className="max-w-xl mx-auto mt-10 p-6 bg-white rounded-2xl shadow-lg text-center">
-      <h2 className="text-xl font-bold mb-2 text-red-600 drop-shadow-sm">
-        ¡Bienvenido a Servix, {obtenerPrimerNombre(userData.nombre)}!
-      </h2>
-      <div className="flex flex-col items-center mb-4">
-        {userData.imagen ? (
-          <img
-            src={`${ENDPOINT.base}/uploads/${userData.imagen}`}
-            alt="Foto de perfil"
-            className="w-28 h-28 object-cover rounded-full border-4 border-gray-400 shadow mb-2"
-          />
-        ) : (
-          <FaUserCircle className="w-28 h-28 text-gray-400 mb-2" />
-        )}
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handleFileChange}
-          className="hidden"
-          id="upload-input"
-        />
-        <label htmlFor="upload-input">
-          <span className="bg-gray-700 text-white py-1 px-3 rounded hover:bg-gray-800 cursor-pointer mt-1 inline-block">
-            {hasImage ? 'Editar imagen' : 'Subir imagen'}
-          </span>
-        </label>
-      </div>
-      <div className="border-t border-gray-200 pt-4 text-left space-y-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Nombre</label>
+    <div className="flex justify-center mt-10">
+      <div className="border border-gray-700 p-6 rounded-lg shadow-lg w-full max-w-xl text-center bg-white">
+        <h1 className="text-2xl font-bold mb-4 text-red-600">
+          ¡Bienvenido a Servix, {primerNombre}!
+        </h1>
+
+        <div className="flex justify-center mb-2">
+          <div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
+            {imagen ? (
+              <img src={URL.createObjectURL(imagen)} alt="Perfil" className="w-full h-full object-cover" />
+            ) : (
+              <UserCircleIcon className="w-20 h-20 text-gray-500" />
+            )}
+          </div>
+        </div>
+
+        <div className="flex justify-center mb-6 gap-2">
+          <button
+            onClick={handleImageClick}
+            className={`text-sm px-3 py-1 rounded cursor-pointer ${imagen ? "bg-red-600 hover:bg-red-700" : "bg-green-600 hover:bg-green-700"} text-white`}
+          >
+            {imagen ? "Quitar imagen" : "Subir imagen"}
+          </button>
+
           <input
-            type="text"
-            value={userData.nombre || ''}
-            disabled
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+            type="file"
+            accept="image/*"
+            className="hidden"
+            ref={inputRef}
+            onChange={handleImageChange}
           />
         </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700">RUT</label>
+
+        <p><strong>Nombre:</strong> {user?.nombre}</p>
+        <p><strong>RUT:</strong> {user?.rut}</p>
+        <p><strong>Edad:</strong> {edad} años</p>
+
+        <div className="text-left mt-6">
+          <label className="block mb-1 font-semibold">Dirección:</label>
           <input
+            ref={direccionRef}
             type="text"
-            value={userData.rut || ''}
-            disabled
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Edad</label>
-          <input
-            type="text"
-            value={`${userData.edad} años` || ''}
-            disabled
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Dirección</label>
-          <input
-            type="text"
+            className="w-full px-3 py-2 border rounded mb-4"
             value={direccion}
             onChange={(e) => setDireccion(e.target.value)}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+            placeholder="Ingresa tu dirección"
+            disabled={bloqueado}
           />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Región</label>
+
+          <label className="block mb-1 font-semibold">Región:</label>
           <select
-            className="w-full mt-1 px-3 py-2 border rounded-md"
-            value={region}
-            onChange={(e) => {
-              setRegion(e.target.value);
-              setComuna("");
-            }}
+            className="w-full px-3 py-2 border rounded mb-4"
+            value={regionSeleccionada}
+            onChange={(e) => setRegionSeleccionada(e.target.value)}
+            disabled={bloqueado}
           >
             <option value="">Selecciona una región</option>
-            {regionesData.regiones.map((r) => (
-              <option key={r["región"]} value={r["región"].trim()}>{r["región"].trim()}</option>
+            {regiones.map((region) => (
+              <option key={region["región"]} value={region["región"].trim()}>
+                {region["región"].trim()}
+              </option>
             ))}
           </select>
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Comuna</label>
+
+          <label className="block mb-1 font-semibold">Comuna:</label>
           <select
-            className="w-full mt-1 px-3 py-2 border rounded-md"
-            value={comuna}
-            onChange={(e) => setComuna(e.target.value)}
-            disabled={!comunasDisponibles.length}
+            className="w-full px-3 py-2 border rounded mb-4"
+            value={comunaSeleccionada}
+            onChange={(e) => setComunaSeleccionada(e.target.value)}
+            disabled={!comunas.length || bloqueado}
           >
             <option value="">Selecciona una comuna</option>
-            {comunasDisponibles.map((c) => (
-              <option key={c} value={c}>{c}</option>
+            {comunas.map((comuna) => (
+              <option key={comuna} value={comuna.trim()}>
+                {comuna.trim()}
+              </option>
             ))}
           </select>
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Teléfono</label>
+
+          <label className="block mb-1 font-semibold">Teléfono:</label>
           <input
             type="tel"
+            className="w-full px-3 py-2 border rounded mb-6"
             value={telefono}
-            onChange={(e) => setTelefono(e.target.value)}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+            onChange={handleTelefonoChange}
+            placeholder="Ingresa tu número de teléfono"
+            disabled={bloqueado}
           />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Tipo de vivienda</label>
-          <select
-            className="w-full mt-1 px-3 py-2 border rounded-md"
-            value={vivienda}
-            onChange={(e) => setVivienda(e.target.value)}
-          >
-            <option value="">Selecciona</option>
-            <option value="Casa">Casa</option>
-            <option value="Departamento">Departamento</option>
-          </select>
-        </div>
-        <div className="flex items-center justify-between">
-          <label className="text-sm font-medium text-gray-700">Ofrecer servicio</label>
-          <Switch
-            checked={ofrecerServicio}
-            onChange={setOfrecerServicio}
-            className={`${ofrecerServicio ? 'bg-green-500' : 'bg-gray-300'} relative inline-flex h-6 w-11 items-center rounded-full`}
-          >
-            <span
-              className={`${ofrecerServicio ? 'translate-x-6' : 'translate-x-1'} inline-block h-4 w-4 transform rounded-full bg-white transition`}
-            />
-          </Switch>
-        </div>
-        {ofrecerServicio && (
-          <>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Tu oficio</label>
+
+          <div className="flex items-center mb-4">
+            <Switch
+              checked={ofrecerServicio}
+              onChange={setOfrecerServicio}
+              className={`${ofrecerServicio ? "bg-green-600" : "bg-gray-300"} relative inline-flex h-6 w-11 items-center rounded-full mr-3`}
+              disabled={bloqueado}
+            >
+              <span className="sr-only">Ofrecer servicio</span>
+              <span
+                className={`${ofrecerServicio ? "translate-x-6" : "translate-x-1"} inline-block h-4 w-4 transform rounded-full bg-white transition`}
+              />
+            </Switch>
+            <span className="font-semibold">Ofrecer servicio</span>
+          </div>
+
+          {ofrecerServicio && (
+            <>
+              <label className="block mb-1 font-semibold">Oficio:</label>
               <input
                 type="text"
+                className="w-full px-3 py-2 border rounded mb-4"
                 value={oficio}
                 onChange={(e) => setOficio(e.target.value)}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+                placeholder="Ingresa tu oficio"
+                disabled={bloqueado}
               />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Escribe aquí tu experiencia</label>
+
+              <label className="block mb-1 font-semibold">Mensaje:</label>
               <textarea
-                rows="4"
-                maxLength={1000}
+                className="w-full px-3 py-2 border rounded mb-4"
                 value={experiencia}
                 onChange={(e) => setExperiencia(e.target.value)}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-                placeholder="Describe brevemente tu experiencia..."
+                placeholder="Comenta brevemente tu experiencia"
+                disabled={bloqueado}
               />
-            </div>
-          </>
-        )}
+            </>
+          )}
+
+          <div className="flex justify-between gap-4">
+            <button
+              onClick={handleSubmit}
+              className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded w-full cursor-pointer flex items-center justify-center gap-2"
+              disabled={bloqueado || enviando}
+            >
+              {enviando && <span className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></span>}
+              Guardar cambios
+            </button>
+
+            <button
+              onClick={handleEditar}
+              className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded w-full cursor-pointer"
+              disabled={!bloqueado}
+            >
+              Editar
+            </button>
+          </div>
+
+          {enviando && (
+            <p className="mt-2 text-sm text-gray-600">Enviando datos...</p>
+          )}
+        </div>
       </div>
     </div>
   );
