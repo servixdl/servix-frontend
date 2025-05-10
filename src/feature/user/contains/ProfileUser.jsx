@@ -2,7 +2,7 @@ import { useAuth } from "../../../context/AuthContext";
 import React, { useState, useEffect, useRef } from "react";
 import { UserCircleIcon } from "@heroicons/react/24/solid";
 import { Switch } from "@headlessui/react";
-import regionesData from "../../../Json/regiones-comunas.json";
+import ApiRegionesComunas from "../../../apiServices/ApiRegionesComunas";
 import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -10,6 +10,7 @@ export default function PerfilUsuario() {
   const { user } = useAuth();
 
   const [direccion, setDireccion] = useState("");
+  const [regiones, setRegiones] = useState([]);
   const [regionSeleccionada, setRegionSeleccionada] = useState("");
   const [comunas, setComunas] = useState([]);
   const [comunaSeleccionada, setComunaSeleccionada] = useState("");
@@ -23,8 +24,6 @@ export default function PerfilUsuario() {
 
   const inputRef = useRef();
   const direccionRef = useRef();
-
-  const regiones = regionesData.regiones || [];
 
   const calcularEdad = (fechaNacimiento) => {
     const hoy = new Date();
@@ -41,8 +40,31 @@ export default function PerfilUsuario() {
   const primerNombre = user?.nombre?.split(" ")[0];
 
   useEffect(() => {
-    const region = regiones.find((r) => r["región"]?.trim() === regionSeleccionada.trim());
-    setComunas(region ? region.comunas : []);
+    const fetchRegiones = async () => {
+      try {
+        const data = await ApiRegionesComunas.getRegiones();
+        setRegiones(data);
+      } catch (error) {
+        console.error("Error al cargar regiones:", error);
+      }
+    };
+    fetchRegiones();
+  }, []);
+
+  useEffect(() => {
+    const fetchComunas = async () => {
+      try {
+        if (regionSeleccionada) {
+          const data = await ApiRegionesComunas.getComunasByRegionId(regionSeleccionada);
+          setComunas(data);
+        } else {
+          setComunas([]);
+        }
+      } catch (error) {
+        console.error("Error al cargar comunas:", error);
+      }
+    };
+    fetchComunas();
   }, [regionSeleccionada]);
 
   const handleImageClick = () => {
@@ -152,8 +174,8 @@ export default function PerfilUsuario() {
           >
             <option value="">Selecciona una región</option>
             {regiones.map((region) => (
-              <option key={region["región"]} value={region["región"].trim()}>
-                {region["región"].trim()}
+              <option key={region.id} value={region.id}>
+                {region.nombre}
               </option>
             ))}
           </select>
@@ -167,8 +189,8 @@ export default function PerfilUsuario() {
           >
             <option value="">Selecciona una comuna</option>
             {comunas.map((comuna) => (
-              <option key={comuna} value={comuna.trim()}>
-                {comuna.trim()}
+              <option key={comuna.id} value={comuna.id}>
+                {comuna.nombre}
               </option>
             ))}
           </select>
