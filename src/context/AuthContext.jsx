@@ -4,9 +4,11 @@ import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import { toast } from "react-toastify";
 import ApiUser from "../apiServices/ApiUser.jsx";
+import { TokenContext } from "./tokenContext.jsx";
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
+  const {setToken } =useContext(TokenContext);
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
 
@@ -24,6 +26,7 @@ export const AuthProvider = ({ children }) => {
       const token = res.token;
       if (token) {
         sessionStorage.setItem("token",token);
+        setToken(true)
         setUser({ token });
         toast.success("Inicio de sesión exitoso ✅");
         navigate("/perfil");
@@ -37,10 +40,11 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
+    setToken(false)
     sessionStorage.removeItem("token");
     setUser(null);
     toast.info("Sesión cerrada correctamente");
-    navigate("/login");
+    navigate("/");
   };
 
   return (
