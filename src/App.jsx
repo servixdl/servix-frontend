@@ -10,12 +10,13 @@ import Footer from "./components/Footer.jsx";
 import PrivateRoute from "./components/PrivateRoute.jsx";
 import NotFound from "./feature/notFound/NotFound.jsx";
 import { AuthProvider } from "./context/AuthContext.jsx";
-
+import TokenProvider from "./context/tokenContext.jsx";
 
 function App() {
   return (
     <div>
       <>
+      <TokenProvider>
       <AuthProvider>
         <Navbar />
         
@@ -37,6 +38,7 @@ function App() {
         </Routes>
         <Footer />
         </AuthProvider>
+        </TokenProvider>
       </>
     </div>
   );
