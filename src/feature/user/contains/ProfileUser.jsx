@@ -40,7 +40,6 @@ export default function PerfilUsuario() {
   const edad = calcularEdad(user?.fecha_nacimiento);
   const primerNombre = user?.nombre?.split(" ")[0];
 
->>>>>>> rama-Adam
   useEffect(() => {
     const region = regiones.find((r) => r["región"]?.trim() === regionSeleccionada.trim());
     setComunas(region ? region.comunas : []);
