@@ -3,16 +3,11 @@ import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import { toast } from "react-toastify";
 import ApiUser from "../apiServices/ApiUser.jsx";
-<<<<<<< HEAD
-import { TokenContext } from "./tokenContext.jsx";
-=======
 import {jwtDecode} from "jwt-decode"; // Librería para decodificar JWT
 
->>>>>>> rama-Adam
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const {setToken } =useContext(TokenContext);
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
 
@@ -33,18 +28,6 @@ export const AuthProvider = ({ children }) => {
     try {
       const res = await ApiUser.login({ correo, contrasena });
       const token = res.token;
-<<<<<<< HEAD
-      if (token) {
-        sessionStorage.setItem("token",token);
-        setToken(true)
-        setUser({ token });
-        toast.success("Inicio de sesión exitoso ✅");
-        navigate("/perfil");
-      } else {
-        throw new Error("No se recibió token del servidor.");
-      }
-      } catch (error) {
-=======
 
       if (!token) throw new Error("No se recibió token del servidor.");
 
@@ -67,7 +50,6 @@ export const AuthProvider = ({ children }) => {
       navigate("/perfil");
 
     } catch (error) {
->>>>>>> rama-Adam
       const msg = error?.response?.data?.message || "Credenciales inválidas";
       toast.error(msg);
     }
@@ -75,15 +57,10 @@ export const AuthProvider = ({ children }) => {
 
   // Cierra sesión: limpia almacenamiento y contexto
   const logout = () => {
-<<<<<<< HEAD
-    setToken(false)
-    sessionStorage.removeItem("token");
-=======
     sessionStorage.clear();
->>>>>>> rama-Adam
     setUser(null);
     toast.info("Sesión cerrada correctamente");
-    navigate("/");
+    navigate("/login");
   };
 
   return (
