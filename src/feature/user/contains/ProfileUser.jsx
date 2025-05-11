@@ -123,11 +123,20 @@ export default function PerfilUsuario() {
     }
   };
 
-  const handleRemoveImage = () => {
-    setImagen(null);
-    setImagenCargada(false);
-    inputRef.current.value = null;
-  };
+const handleRemoveImage = async () => {
+  setImagen(null);
+  setImagenCargada(false);
+  inputRef.current.value = null;
+
+  try {
+    await ApiUser.eliminarImagen(user.rut);
+    toast.success("Imagen eliminada del perfil");
+  } catch (error) {
+    console.error("Error al eliminar la imagen del servidor:", error);
+    toast.error("No se pudo eliminar la imagen del servidor");
+  }
+};
+
 
   const handleTelefonoChange = (e) => {
     const valor = e.target.value;

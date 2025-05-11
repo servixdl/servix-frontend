@@ -35,7 +35,15 @@ const ApiUser = {
   update: async (id, formData) => {
     const response = await axios.put(`${BASE_URL}/${id}`, formData, getAuthHeader());
     return response.data;
-  }
+  }, 
+  eliminarImagen: (rut) =>
+  axios.delete(`${BASE_URL}/users/${rut}/imagen`, {
+    headers: {
+      Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+    },
+  }),
+
+  
 };
 
 export default ApiUser;
