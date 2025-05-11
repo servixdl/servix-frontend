@@ -2,11 +2,13 @@ import { useState ,useContext} from "react";
 import { RiCloseLargeLine, RiMenuFill } from "react-icons/ri";
 import { Link } from "react-router-dom";
 import {TokenContext} from "../context/tokenContext.jsx";
+import { ServiceProviderContext } from "../context/serviceProviderContext.jsx"; 
 import {useAuth} from '../context/AuthContext.jsx'
 
 export default function Navbar() {
   
   const {token } =useContext(TokenContext);
+  const {serviceP} = useContext(ServiceProviderContext)
   const {logout} = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
   const buttons = (ruta1, nombre1, class1, ruta2, nombre2, class2, onSecondClick) => {
@@ -27,7 +29,7 @@ export default function Navbar() {
         )}
       </>
     );};
-    console.log(token)
+
   return (
     <header className="bg-background text-foreground shadow-xs sticky top-0 z-50">
       <div className="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 lg:px-8 py-4">
@@ -43,9 +45,15 @@ export default function Navbar() {
           <Link to="/offerservice" className="text-sm hover:underline">
             Ofrecer un servicio
           </Link>
-          <Link to="/contact" className="text-sm hover:underline" onClick={logout}>
+          <Link to="/contact" className="text-sm hover:underline" >
             Contacto
           </Link>
+          {serviceP?(<>
+          <Link to="/myServices" className="text-sm hover:underline" >
+            Contacto
+          </Link></>):(
+           <></>
+          )}
         </nav>
 
         <div className="hidden md:flex items-center gap-3">
@@ -78,8 +86,15 @@ export default function Navbar() {
             Ofrecer un servicio
           </a>
           <a href="#contacto" className="block text-sm hover:underline">
-            Contacto
+            Contact
           </a>
+          {serviceP?(<>
+          <a href="#myServices" className="block text-sm hover:underline" >
+            Mis Servicios
+          </a></>):(
+          <></>
+          )}
+
           <div className="flex flex-col gap-2 pt-2">
 
           {!token?(<>

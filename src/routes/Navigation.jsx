@@ -8,6 +8,7 @@ import PerfilUsuario from "../feature/user/contains/ProfileUser.jsx";
 import PrivateRoute from "../components/PrivateRoute.jsx";
 import NotFound from "../feature/notFound/NotFound.jsx";
 import Sale from "../feature/sale/content/Sale.jsx";
+import MyServices from "../feature/myServices/contens/MyServices.jsx";
 import { useContext } from "react";
 import { TokenContext } from "../context/tokenContext.jsx";
 function Navigation() {
@@ -21,6 +22,7 @@ function Navigation() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/sale/:id" element={!token? <Home/> :< Sale/>} />
+          <Route path="/myServices" element={!token? <Home/>:<MyServices/>}></Route>
           <Route
             path="/perfil"
             element={
