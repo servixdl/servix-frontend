@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:3000/appointments";
+const BASE_URL = "http://localhost:3000/appointment";
 import axios from "axios";
 const token =sessionStorage.getItem('token')
 const header = {headers:{Authorization: `Bearer ${token}`}}

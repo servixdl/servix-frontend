@@ -4,8 +4,8 @@ const token =sessionStorage.getItem('token')
 const header = {headers:{Authorization: `Bearer ${token}`}}
 
 const ApiSales ={
-    create:async(user)=>{
-        const response = await axios.post(BASE_URL,user,header)
+    create:async(sale)=>{
+        const response = await axios.post(BASE_URL,sale,header)
         return response.data;
     },
     getById:async(id)=>{

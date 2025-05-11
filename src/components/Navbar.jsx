@@ -6,8 +6,8 @@ import {useAuth} from '../context/AuthContext.jsx'
 
 export default function Navbar() {
   
-  const {token } =useContext(TokenContext)
-  const {logout} = useAuth()
+  const {token } =useContext(TokenContext);
+  const {logout} = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
   const buttons = (ruta1, nombre1, class1, ruta2, nombre2, class2, onSecondClick) => {
     return (

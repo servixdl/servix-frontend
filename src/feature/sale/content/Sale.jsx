@@ -2,13 +2,15 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import ApiService from "../../../apiServices/ApiService";
 import ApiSales from "../../../apiServices/ApiSales";
-export default function Sell(){
-    const id = useParams();
+import ApiAppointment from "../../../apiServices/ApiAppointment";
+export default function Sale(){
+    const {id} = useParams();
     const [service, setService] = useState(null);
     const [fechaCita, setFechaCita] = useState("");
     const [horaInicio, setHoraInicio] = useState("");
     const [horaTermino, setHoraTermino] = useState("");
     const [mensaje, setMensaje] = useState("");
+    const rut = sessionStorage.getItem("rut")
     useEffect(() => {
         const fetchService = async () => {
           const response = await ApiService.getById(id);
@@ -16,17 +18,29 @@ export default function Sell(){
         };
         fetchService();
       }, [id]);
-
+    
     const handleAppointment = async () =>{
         try {
+          const ventaData = {
+            usuario_id: rut,
+            servicio_id: service.id_servicio,
+            fecha_venta: new Date().toISOString().split('T')[0], // YYYY-MM-DD
+            total: service.precio
+          };
+          const responseSale =await ApiSales.create(ventaData)
             const citaData = {
-                servicio_id: service.id, // o como se llame tu campo
+                venta_id:responseSale.saleId,
+                servicio_id: service.id_servicio, 
                 fecha_cita: fechaCita,
                 hora_inicio: horaInicio,
                 hora_termino: horaTermino,
-                usuario_id: "33333333-3", // idealmente desde el contexto de usuario
+                usuario_id: rut, // idealmente desde el contexto de usuario
+                estado: "pendiente"
               };
-              const response = await ApiService.crearVentaConCita(citaData); // deberás implementar esto en tu ApiService
+             console.log(citaData)
+              const responseAppointment = await ApiAppointment.create(citaData);
+              
+               // deberás implementar esto en tu ApiService
               setMensaje("Cita y venta creadas exitosamente.");
         } catch (error) {
             setMensaje("Ocurrió un error al crear la cita.");
@@ -34,7 +48,7 @@ export default function Sell(){
     }  
 
     if (!service) return <p className="text-center text-lg">Cargando...</p>;
-    return Sell (
+    return (
         <div className="p-4 max-w-6xl mx-auto">
         <div className="flex flex-col md:flex-row gap-6 bg-white rounded-xl shadow-lg p-6">
           <div className="md:w-1/2 w-full flex justify-center items-center">
@@ -86,7 +100,7 @@ export default function Sell(){
   
             {/* Botones */}
             <div className="flex flex-col sm:flex-row gap-4">
-              <button className="btn-primary" onClick={handleAgendarCita}>
+              <button className="btn-primary" onClick={handleAppointment}>
                 Agendar y Comprar
               </button>
               <button className="btn-outline">Valorar servicio</button>
