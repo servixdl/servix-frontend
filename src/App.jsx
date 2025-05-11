@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import React from "react";
 import Navbar from "./components/Navbar.jsx";
 import Footer from "./components/Footer.jsx";
 import { AuthProvider } from "./context/AuthContext.jsx";
@@ -9,14 +9,14 @@ function App() {
   return (
     <div>
       <>
-      <TokenProvider>
-      <ServiceProvider>
-      <AuthProvider>
-        <Navbar />
-       <Navigation/>
-        <Footer />
-        </AuthProvider>
-        </ServiceProvider>
+        <TokenProvider>
+          <ServiceProvider>
+            <AuthProvider>
+              <Navbar />
+              <Navigation />
+              <Footer />
+            </AuthProvider>
+          </ServiceProvider>
         </TokenProvider>
       </>
     </div>

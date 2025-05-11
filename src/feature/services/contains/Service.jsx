@@ -1,7 +1,9 @@
+import React from "react";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import ApiService from "../../../apiServices/ApiService";
 import { Link } from "react-router-dom";
+import formatToChileanPeso from "../../../utils/FormatNumber";
 export default function ServicePage() {
   const { id } = useParams();
   const [service, setService] = useState({});
@@ -17,8 +19,8 @@ export default function ServicePage() {
   if (!service) return <p className="text-center text-lg">Cargando...</p>;
 
   return (
-    <div className="p-4 max-w-6xl mx-auto">
-      <div className="flex flex-col md:flex-row gap-6 bg-white rounded-xl shadow-lg p-6">
+    <div className="p-4 max-w-6xl mx-auto mt-20">
+      <div className="flex flex-col md:flex-row gap-6 bg-white rounded-xl shadow-lg p-6 border border-gray-100">
         <div className="md:w-1/2 w-full flex justify-center items-center">
           <img
             className="rounded-xl shadow-md max-h-96 object-cover"
@@ -33,12 +35,20 @@ export default function ServicePage() {
           <p className="text-gray-600 mb-4 leading-relaxed">
             {service.descripcion}
           </p>
-          <p className="text-highlight text-2xl mb-6">${service.precio}</p>
+          <p className="text-highlight text-2xl mb-6">
+            {formatToChileanPeso(service.precio)}
+          </p>
 
           {/* Botones de acción */}
           <div className="flex flex-col sm:flex-row gap-4">
-            <Link className="btn-primary" to={"/sale/"+service.id_servicio} key={service.id_servicio}>Solicitar servicio</Link>
-            <button className="btn-outline" >Valorar servicio</button>
+            <Link
+              className="btn-primary"
+              to={"/sale/" + service.id_servicio}
+              key={service.id_servicio}
+            >
+              Solicitar servicio
+            </Link>
+            <button className="btn-outline">Valorar servicio</button>
           </div>
         </div>
       </div>
