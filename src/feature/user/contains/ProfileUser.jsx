@@ -28,6 +28,7 @@ export default function PerfilUsuario() {
   const inputRef = useRef();
   const direccionRef = useRef();
   const imagenOcultaParaSiempre = useRef(false);
+  const [comunaIdDesdeBackend, setComunaIdDesdeBackend] = useState(null);
 
   const calcularEdad = (fechaNacimiento) => {
     const hoy = new Date();
@@ -42,6 +43,31 @@ export default function PerfilUsuario() {
 
   const edad = calcularEdad(user?.fecha_nacimiento);
   const primerNombre = user?.nombre?.split(" ")[0];
+
+  useEffect(() => {
+    const cargarDatosPerfil = async () => {
+      try {
+        const datos = await ApiUser.getById(user.rut);
+        setDireccion(datos.direccion || "");
+        setTelefono(datos.telefono || "");
+        setRegionSeleccionada(datos.comuna?.region_id?.toString() || "");
+        setComunaIdDesdeBackend(datos.comuna?.id?.toString() || "");
+        setOfrecerServicio(datos.vendedor || false);
+        setOficio(datos.oficio || "");
+        setExperiencia(datos.experiencia || "");
+        if (datos.imagen) {
+          setImagen(datos.imagen);
+        }
+        setBloqueado(true);
+      } catch (error) {
+        console.error("Error al cargar perfil del usuario:", error);
+      }
+    };
+
+    if (user?.rut) {
+      cargarDatosPerfil();
+    }
+  }, [user]);
 
   useEffect(() => {
     const fetchRegiones = async () => {
@@ -70,6 +96,13 @@ export default function PerfilUsuario() {
     };
     fetchComunas();
   }, [regionSeleccionada]);
+
+  useEffect(() => {
+    if (comunas.length > 0 && comunaIdDesdeBackend) {
+      setComunaSeleccionada(comunaIdDesdeBackend);
+      setComunaIdDesdeBackend(null);
+    }
+  }, [comunas, comunaIdDesdeBackend]);
 
   const handleImageClick = () => {
     if (imagen) {
@@ -168,7 +201,11 @@ export default function PerfilUsuario() {
         <div className="flex justify-center mb-2">
           <div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
             {imagen ? (
-              <img src={URL.createObjectURL(imagen)} alt="Perfil" className="w-full h-full object-cover" />
+              <img
+              src={typeof imagen === "string" ? imagen : URL.createObjectURL(imagen)}
+              alt="Perfil"
+              className="w-full h-full object-cover"
+            />
             ) : (
               <UserCircleIcon className="w-20 h-20 text-gray-500" />
             )}
@@ -207,7 +244,7 @@ export default function PerfilUsuario() {
     value={direccion}
     onChange={(e) => setDireccion(e.target.value)}
     placeholder="Ingresa tu dirección"
-    disabled={bloqueado}
+    disabled={bloqueado} onClick={() => bloqueado && toast.info('Debes presionar el botón "Editar" para modificar este campo')}
   />
 
   <label className="block mb-1 font-semibold">Región:</label>
@@ -215,7 +252,7 @@ export default function PerfilUsuario() {
     className="w-full px-3 py-2 border rounded mb-4"
     value={regionSeleccionada}
     onChange={(e) => setRegionSeleccionada(e.target.value)}
-    disabled={bloqueado}
+    disabled={bloqueado} onClick={() => bloqueado && toast.info('Debes presionar el botón "Editar" para modificar este campo')}
   >
     <option value="">Selecciona una región</option>
     {regiones.map((region) => (
@@ -224,6 +261,9 @@ export default function PerfilUsuario() {
       </option>
     ))}
   </select>
+  {regionSeleccionada && (
+    <p className="text-sm text-gray-600 mb-2">Región seleccionada: {regiones.find(r => r.id.toString() === regionSeleccionada)?.nombre}</p>
+  )}
 
   <label className="block mb-1 font-semibold">Comuna:</label>
   <select
@@ -239,6 +279,9 @@ export default function PerfilUsuario() {
       </option>
     ))}
   </select>
+  {comunaSeleccionada && (
+    <p className="text-sm text-gray-600 mb-2">Comuna seleccionada: {comunas.find(c => c.id.toString() === comunaSeleccionada)?.nombre}</p>
+  )}
 
   <label className="block mb-1 font-semibold">Teléfono:</label>
   <input
@@ -247,7 +290,7 @@ export default function PerfilUsuario() {
     value={telefono}
     onChange={handleTelefonoChange}
     placeholder="Ingresa tu número de teléfono"
-    disabled={bloqueado}
+    disabled={bloqueado} onClick={() => bloqueado && toast.info('Debes presionar el botón "Editar" para modificar este campo')}
   />
 
   <div className="flex items-center mb-4">
@@ -255,7 +298,7 @@ export default function PerfilUsuario() {
       checked={ofrecerServicio}
       onChange={setOfrecerServicio}
       className={`${ofrecerServicio ? "bg-green-600" : "bg-gray-300"} relative inline-flex h-6 w-11 items-center rounded-full mr-3`}
-      disabled={bloqueado}
+      disabled={bloqueado} onClick={() => bloqueado && toast.info('Debes presionar el botón "Editar" para modificar este campo')}
     >
       <span className="sr-only">Ofrecer servicio</span>
       <span
@@ -274,7 +317,7 @@ export default function PerfilUsuario() {
         value={oficio}
         onChange={(e) => setOficio(e.target.value)}
         placeholder="Ingresa tu oficio"
-        disabled={bloqueado}
+        disabled={bloqueado} onClick={() => bloqueado && toast.info('Debes presionar el botón "Editar" para modificar este campo')}
       />
 
       <label className="block mb-1 font-semibold">Mensaje:</label>
@@ -283,7 +326,7 @@ export default function PerfilUsuario() {
         value={experiencia}
         onChange={(e) => setExperiencia(e.target.value)}
         placeholder="Comenta brevemente tu experiencia"
-        disabled={bloqueado}
+        disabled={bloqueado} onClick={() => bloqueado && toast.info('Debes presionar el botón "Editar" para modificar este campo')}
       />
     </>
   )}
