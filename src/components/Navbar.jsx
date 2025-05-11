@@ -1,4 +1,4 @@
-import { useState,useContext } from "react";
+import { useState, useContext } from "react";
 import { RiCloseLargeLine, RiMenuFill } from "react-icons/ri";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
@@ -7,7 +7,7 @@ import { ServiceProviderContext } from "../context/serviceProviderContext.jsx";
 export default function Navbar() {
   const { user, logout } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
-  const {serviceP} = useContext(ServiceProviderContext);
+  const { serviceP } = useContext(ServiceProviderContext);
 
   const buttons = (
     ruta1,
@@ -55,39 +55,40 @@ export default function Navbar() {
           <Link to="/contact" className="text-sm hover:underline">
             Contacto
           </Link>
-          {serviceP?(<>
-          <Link to="/myServices" className="text-sm hover:underline" >
-            Contacto
-          </Link></>):(
-           <></>
+          {serviceP ? (
+            <>
+              <Link to="/myServices" className="text-sm hover:underline">
+                Contacto
+              </Link>
+            </>
+          ) : (
+            <></>
           )}
         </nav>
 
         <div className="hidden md:flex items-center gap-3">
-          {!user ? (
-            buttons(
-              "/login",
-              "Iniciar sesión",
-              "btn-outline",
-              "/register",
-              "Registrarse",
-              "btn-primary"
-            )
-          ) : (
-            buttons(
-              "/perfil",
-              "Perfil",
-              "btn-outline",
-              "/",
-              "Cerrar sesión",
-              "btn-primary",
-              () => {
-                if (confirm("¿Estás seguro que deseas cerrar sesión?")) {
-                  logout();
+          {!user
+            ? buttons(
+                "/login",
+                "Iniciar sesión",
+                "btn-outline",
+                "/register",
+                "Registrarse",
+                "btn-primary"
+              )
+            : buttons(
+                "/perfil",
+                "Perfil",
+                "btn-outline",
+                "/",
+                "Cerrar sesión",
+                "btn-primary",
+                () => {
+                  if (confirm("¿Estás seguro que deseas cerrar sesión?")) {
+                    logout();
+                  }
                 }
-              }
-            )
-          )}
+              )}
         </div>
 
         <button
@@ -111,30 +112,28 @@ export default function Navbar() {
             Contacto
           </Link>
           <div className="flex flex-col gap-2 pt-2">
-            {!user ? (
-              buttons(
-                "/login",
-                "Iniciar sesión",
-                "btn-outline w-full",
-                "/register",
-                "Registrarse",
-                "btn-primary w-full"
-              )
-            ) : (
-              buttons(
-                "/perfil",
-                "Perfil",
-                "btn-outline w-full",
-                "/",
-                "Cerrar sesión",
-                "btn-primary w-full",
-                () => {
-                  if (confirm("¿Estás seguro que deseas cerrar sesión?")) {
-                    logout();
+            {!user
+              ? buttons(
+                  "/login",
+                  "Iniciar sesión",
+                  "btn-outline w-full",
+                  "/register",
+                  "Registrarse",
+                  "btn-primary w-full"
+                )
+              : buttons(
+                  "/perfil",
+                  "Perfil",
+                  "btn-outline w-full",
+                  "/",
+                  "Cerrar sesión",
+                  "btn-primary w-full",
+                  () => {
+                    if (confirm("¿Estás seguro que deseas cerrar sesión?")) {
+                      logout();
+                    }
                   }
-                }
-              )
-            )}
+                )}
           </div>
         </div>
       )}
