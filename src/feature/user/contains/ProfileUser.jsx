@@ -2,7 +2,8 @@ import { useAuth } from "../../../context/AuthContext";
 import React, { useState, useEffect, useRef } from "react";
 import { UserCircleIcon } from "@heroicons/react/24/solid";
 import { Switch } from "@headlessui/react";
-import regionesData from "../../../Json/regiones-comunas.json";
+import ApiRegionesComunas from "../../../apiServices/ApiRegionesComunas";
+import ApiUser from "../../../apiServices/ApiUser";
 import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -10,6 +11,7 @@ export default function PerfilUsuario() {
   const { user } = useAuth();
 
   const [direccion, setDireccion] = useState("");
+  const [regiones, setRegiones] = useState([]);
   const [regionSeleccionada, setRegionSeleccionada] = useState("");
   const [comunas, setComunas] = useState([]);
   const [comunaSeleccionada, setComunaSeleccionada] = useState("");
@@ -20,11 +22,10 @@ export default function PerfilUsuario() {
   const [ofrecerServicio, setOfrecerServicio] = useState(false);
   const [oficio, setOficio] = useState("");
   const [experiencia, setExperiencia] = useState("");
+  const [imagenCargada, setImagenCargada] = useState(false);
 
   const inputRef = useRef();
   const direccionRef = useRef();
-
-  const regiones = regionesData.regiones || [];
 
   const calcularEdad = (fechaNacimiento) => {
     const hoy = new Date();
@@ -41,8 +42,31 @@ export default function PerfilUsuario() {
   const primerNombre = user?.nombre?.split(" ")[0];
 
   useEffect(() => {
-    const region = regiones.find((r) => r["región"]?.trim() === regionSeleccionada.trim());
-    setComunas(region ? region.comunas : []);
+    const fetchRegiones = async () => {
+      try {
+        const data = await ApiRegionesComunas.getRegiones();
+        setRegiones(data);
+      } catch (error) {
+        console.error("Error al cargar regiones:", error);
+      }
+    };
+    fetchRegiones();
+  }, []);
+
+  useEffect(() => {
+    const fetchComunas = async () => {
+      try {
+        if (regionSeleccionada) {
+          const data = await ApiRegionesComunas.getComunasByRegionId(regionSeleccionada);
+          setComunas(data);
+        } else {
+          setComunas([]);
+        }
+      } catch (error) {
+        console.error("Error al cargar comunas:", error);
+      }
+    };
+    fetchComunas();
   }, [regionSeleccionada]);
 
   const handleImageClick = () => {
@@ -57,6 +81,7 @@ export default function PerfilUsuario() {
     const file = e.target.files[0];
     if (file && file.type.startsWith("image/")) {
       setImagen(file);
+      setImagenCargada(true);
     } else {
       toast.error("Solo se permiten archivos de imagen.");
       inputRef.current.value = null;
@@ -65,6 +90,7 @@ export default function PerfilUsuario() {
 
   const handleRemoveImage = () => {
     setImagen(null);
+    setImagenCargada(false);
     inputRef.current.value = null;
   };
 
@@ -76,22 +102,59 @@ export default function PerfilUsuario() {
 
   const camposCompletos = direccion && regionSeleccionada && comunaSeleccionada && telefono;
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!camposCompletos) {
-      toast.warning("Debes llenar todos los campos");
+      toast.warning("Debes llenar todos los campos obligatorios");
       return;
     }
+
+    if (ofrecerServicio && (!oficio.trim() || !experiencia.trim())) {
+      toast.warning("Debes ingresar el oficio y experiencia para ofrecer un servicio");
+      return;
+    }
+
     setEnviando(true);
-    setTimeout(() => {
-      setEnviando(false);
+    try {
+      const formData = new FormData();
+      formData.append("direccion", direccion);
+      formData.append("telefono", telefono);
+      formData.append("comuna_id", comunaSeleccionada);
+      formData.append("vendedor", ofrecerServicio);
+
+      if (ofrecerServicio) {
+        formData.append("oficio", oficio);
+        formData.append("experiencia", experiencia);
+      }
+
+      if (imagen && imagenCargada) {
+        formData.append("imagen", imagen);
+      }
+
+      const updatedUser = await ApiUser.update(user.rut, formData);
+      toast.success("Datos enviados con éxito", {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored"
+      });
       setBloqueado(true);
-    }, 2000);
+    } catch (error) {
+      console.error("Error al guardar:", error);
+      toast.error("Hubo un error al guardar los cambios");
+    } finally {
+      setEnviando(false);
+    }
   };
 
   const handleEditar = () => {
     setBloqueado(false);
     setTimeout(() => direccionRef.current?.focus(), 100);
   };
+
 
   return (
     <div className="flex justify-center mt-10">
@@ -152,8 +215,8 @@ export default function PerfilUsuario() {
           >
             <option value="">Selecciona una región</option>
             {regiones.map((region) => (
-              <option key={region["región"]} value={region["región"].trim()}>
-                {region["región"].trim()}
+              <option key={region.id} value={region.id}>
+                {region.nombre}
               </option>
             ))}
           </select>
@@ -167,8 +230,8 @@ export default function PerfilUsuario() {
           >
             <option value="">Selecciona una comuna</option>
             {comunas.map((comuna) => (
-              <option key={comuna} value={comuna.trim()}>
-                {comuna.trim()}
+              <option key={comuna.id} value={comuna.id}>
+                {comuna.nombre}
               </option>
             ))}
           </select>
