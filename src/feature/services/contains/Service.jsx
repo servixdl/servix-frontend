@@ -1,12 +1,15 @@
-import React from "react";
-import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import React, { useState } from "react";
+import { useParams, Link } from "react-router-dom";
+import { useEffect } from "react";
 import ApiService from "../../../apiServices/ApiService";
-import { Link } from "react-router-dom";
 import formatToChileanPeso from "../../../utils/FormatNumber";
+import { useAuth } from "../../../context/AuthContext";
+
 export default function ServicePage() {
   const { id } = useParams();
   const [service, setService] = useState({});
+  const [showModal, setShowModal] = useState(false);
+  const { user } = useAuth();
 
   useEffect(() => {
     const fetchService = async () => {
@@ -15,6 +18,15 @@ export default function ServicePage() {
     };
     fetchService();
   }, [id]);
+
+  const handleSolicitarServicio = () => {
+    if (!user) {
+      setShowModal(true);
+    } else {
+      // Redirigir al usuario a la página de solicitud de servicio
+      window.location.href = `/sale/${service.id_servicio}`;
+    }
+  };
 
   if (!service) return <p className="text-center text-lg">Cargando...</p>;
 
@@ -41,17 +53,38 @@ export default function ServicePage() {
 
           {/* Botones de acción */}
           <div className="flex flex-col sm:flex-row gap-4">
-            <Link
-              className="btn-primary"
-              to={"/sale/" + service.id_servicio}
-              key={service.id_servicio}
-            >
+            <button className="btn-primary" onClick={handleSolicitarServicio}>
               Solicitar servicio
-            </Link>
+            </button>
             <button className="btn-outline">Valorar servicio</button>
           </div>
         </div>
       </div>
+
+      {/* Modal */}
+      {showModal && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl shadow-2xl max-w-md w-full p-8 animate-fadeIn">
+            <h2 className="text-2xl font-semibold text-gray-800 mb-6 text-center">
+              Inicia sesión
+            </h2>
+            <p className="text-gray-600 mb-6 text-center">
+              Debes iniciar sesión para poder solicitar este servicio.
+            </p>
+            <div className="flex justify-center gap-4">
+              <button
+                className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100 transition"
+                onClick={() => setShowModal(false)}
+              >
+                Cancelar
+              </button>
+              <Link to="/login" className="btn-primary">
+                Iniciar sesión
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
