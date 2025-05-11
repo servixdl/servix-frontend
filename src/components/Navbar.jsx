@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useState,useContext } from "react";
 import { RiCloseLargeLine, RiMenuFill } from "react-icons/ri";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
 import React from "react";
+import { ServiceProviderContext } from "../context/serviceProviderContext.jsx";
 export default function Navbar() {
   const { user, logout } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
+  const {serviceP} = useContext(ServiceProviderContext);
 
   const buttons = (
     ruta1,
