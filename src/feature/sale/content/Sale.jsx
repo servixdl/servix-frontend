@@ -27,20 +27,21 @@ export default function Sale(){
             fecha_venta: new Date().toISOString().split('T')[0], // YYYY-MM-DD
             total: service.precio
           };
+          console.log(ventaData)
           const responseSale =await ApiSales.create(ventaData)
+          
             const citaData = {
                 venta_id:responseSale.saleId,
                 servicio_id: service.id_servicio, 
                 fecha_cita: fechaCita,
                 hora_inicio: horaInicio,
                 hora_termino: horaTermino,
-                usuario_id: rut, // idealmente desde el contexto de usuario
+                usuario_id: rut, 
                 estado: "pendiente"
               };
              console.log(citaData)
               const responseAppointment = await ApiAppointment.create(citaData);
-              
-               // deberás implementar esto en tu ApiService
+
               setMensaje("Cita y venta creadas exitosamente.");
         } catch (error) {
             setMensaje("Ocurrió un error al crear la cita.");
