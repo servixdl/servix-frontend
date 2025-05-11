@@ -1,4 +1,6 @@
 import React from "react";
+import PropTypes from "prop-types";
+import formatToChileanPeso from "../../../utils/FormatNumber"; // Importa la utilidad
 
 const CardService = ({ service }) => {
   return (
@@ -11,10 +13,21 @@ const CardService = ({ service }) => {
       <h2 className="text-lg font-bold text-gray-800 mb-2">{service.name}</h2>
       <p className="text-gray-600 mb-4">{service.description}</p>
       {service.price && (
-        <p className="text-highlight text-lg">Valor: ${service.price}</p>
+        <p className="text-highlight text-lg">
+          Valor: {formatToChileanPeso(service.price)}
+        </p>
       )}
     </div>
   );
+};
+
+CardService.propTypes = {
+  service: PropTypes.shape({
+    image: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
+    price: PropTypes.number,
+  }).isRequired,
 };
 
 export default CardService;
