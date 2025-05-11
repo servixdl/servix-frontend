@@ -123,7 +123,7 @@ export default function RegisterPage() {
     const fecha_nacimiento = `${String(year).padStart(4, '0')}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
   
     try {
-      await axios.post(ENDPOINT.registrer, {
+      await axios.post(ENDPOINT.register, {
         rut: String(rut),
         nombre: String(name),
         fecha_nacimiento: String(fecha_nacimiento),
