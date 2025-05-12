@@ -14,8 +14,8 @@ const EditServiceModal = ({ isOpen, onClose, service, onUpdate }) => {
     if (service) {
       setFormData({
         nombre: service.nombre || "",
-        descripcion: service.descripcion || "",
         precio: service.precio || "",
+        descripcion: service.descripcion || "",
         imagen: service.imagen || "",
       });
     }

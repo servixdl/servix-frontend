@@ -58,8 +58,15 @@ const ApiService = {
         
     },
     update: async (id, service) => {
-    const response = await axios.put(`${BASE_URL}/${id}`, service, getAuthHeader());
+      try{
+        const response = await axios.put(`${BASE_URL}/${id}`, service, getAuthHeader());
+        console.log(response.data)
     return response.data;
+      }catch(error){
+              console.error('Error al actualizar el servicio', error);
+      throw error;
+      }
+    
   }, 
   delete: async (id) => {
     const response = await axios.delete(`${BASE_URL}/${id}`, getAuthHeader());
