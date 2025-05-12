@@ -23,6 +23,13 @@ const ApiSales = {
     const response = await axios.get(BASE_URL, getAuthHeader());
     return response.data;
   },
+  getByOficio: async (oficio) => {
+    const response = await axios.get(
+      `${BASE_URL}/oficio/${encodeURIComponent(oficio)}`,
+      getAuthHeader()
+    );
+    return response.data;
+  }
 };
 
 export default ApiSales;
