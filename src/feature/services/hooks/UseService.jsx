@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import ApiService from "../../../apiServices/ApiService";
+import ApiSales from "../../../apiServices/ApiSales";
 
 const useServices = () => {
   const [allServices, setAllServices] = useState([]);
@@ -8,7 +8,7 @@ const useServices = () => {
 
   const fetchAll = async () => {
     setLoading(true);
-    const data = await ApiService.getAll();
+    const data = await ApiSales.getAll();
     setAllServices(data);
     setServices(data);
     setLoading(false);
