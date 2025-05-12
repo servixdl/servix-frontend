@@ -1,25 +1,42 @@
+import ApiService from "../../../apiServices/ApiService";
 import UseMyService from "../hooks/UseMyService";
-import MyServiceCard from "../components/MyServicesCard";
 import { useState } from "react";
-
+import CreateServiceModal from "../components/modalNewService";
+import EditServiceModal from "../components/ModalUpdateService";
+import { toast } from 'react-toastify';
 export default function MyServices() {
   const { loading, myServices } = UseMyService();
   const [services, setServices] = useState(myServices); 
-  
+  const [showModal, setShowModal] = useState(false);
+  const [selectedService, setSelectedService] = useState(null);
+  const [showEditModal, setShowEditModal] = useState(false);
+
+
+
   const handleEdit = (service) => {
-    alert(`Editar servicio: ${service.nombre}`);
-    // Abrir modal o redirigir
+      setSelectedService(service);
+  setShowEditModal(true);
   };
+
+  const handleUpdate = () => {
+  setServices(myServices)
+};
 
   const handleDelete = (id) => {
     if (window.confirm("¿Estás seguro de eliminar este servicio?")) {
-      const updated = services.filter((s) => s.id_servicio !== id);
-      setServices(updated);
+    try {
+       ApiService.delete(id); // Llama al backend para eliminar
+      setServices(prev => prev.filter((s) => s.id_servicio !== id)); // Actualiza la lista local
+      toast.success("Servicio eliminado exitosamente");
+    } catch (error) {
+      console.error("Error al eliminar servicio:", error);
+      toast.error("Error al eliminar el servicio");
     }
+  }
   };
 
-  const handleCreate = () => {
-    alert("Crear nuevo servicio");
+  const handleCreate = (newService) => {
+   setServices((prev) => [...prev, newService]);
   };
 
   // Mostrar loading si está cargando
@@ -30,12 +47,25 @@ export default function MyServices() {
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-semibold">Mis Servicios</h1>
         <button
-          onClick={handleCreate}
+          onClick={()=>setShowModal(true)}
           className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700"
         >
           Crear nuevo servicio
         </button>
       </div>
+
+       <CreateServiceModal
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+        onAdd={handleCreate}
+      />
+
+      <EditServiceModal
+  isOpen={showEditModal}
+  onClose={() => setShowEditModal(false)}
+  service={selectedService}
+  onUpdate={handleUpdate}
+/>
 
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow">
@@ -96,5 +126,8 @@ export default function MyServices() {
         </table>
       </div>
     </div>
+
+    
   );
+
 }

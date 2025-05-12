@@ -1,4 +1,3 @@
-
 import axios from "axios";
 
 const BASE_URL = "http://localhost:3000/services";
@@ -47,7 +46,26 @@ const ApiService = {
       console.error(`Error al obtener servicios por RUT (${rut}):`, error);
       throw error;
     }
-  }
+  },
+    create:async(service)=>{
+      try{
+        const response = await axios.post(BASE_URL,service,getAuthHeader());
+        return response.data;
+      }catch(error){
+      console.error('Error al crear el servicio', error);
+      throw error;
+      }
+        
+    },
+    update: async (id, service) => {
+    const response = await axios.put(`${BASE_URL}/${id}`, service, getAuthHeader());
+    return response.data;
+  }, 
+  delete: async (id) => {
+    const response = await axios.delete(`${BASE_URL}/${id}`, getAuthHeader());
+    return response.data;
+  }, 
+
 };
 
 export default ApiService;
