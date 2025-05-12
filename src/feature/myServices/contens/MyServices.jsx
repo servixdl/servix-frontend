@@ -55,7 +55,7 @@ export default function MyServices() {
                 className="border-b border-gray-200 hover:bg-gray-50"
               >
                 <td className="py-3 px-6">{service.nombre}</td>
-                <td className="py-3 px-6">{service.descripcion}</td>
+                <td className="py-3 px-6">{service.imagen}</td>
                 <td className="py-3 px-6">
                   {new Intl.NumberFormat("es-CL", {
                     style: "currency",
@@ -64,7 +64,7 @@ export default function MyServices() {
                 </td>
                 <td className="py-3 px-6">
                   <img
-                    src={service.imagen}
+                    src={service.descripcion}
                     alt="imagen"
                     className="w-20 h-14 object-cover rounded"
                   />
