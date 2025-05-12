@@ -49,7 +49,7 @@ export default function Navbar() {
           <Link to="/allservice" className="text-sm hover:underline">
             Servicios
           </Link>
-          <Link to="/offerservice" className="text-sm hover:underline">
+          <Link to="/register" className="text-sm hover:underline">
             Ofrecer un servicio
           </Link>
           <Link to="/contact" className="text-sm hover:underline">

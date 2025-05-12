@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import ApiSales from "../../../apiServices/ApiSales";
+import ApiService from "../../../apiServices/ApiService";
 
 const useServices = () => {
   const [allServices, setAllServices] = useState([]);
@@ -8,7 +8,7 @@ const useServices = () => {
 
   const fetchAll = async () => {
     setLoading(true);
-    const data = await ApiSales.getAll();
+    const data = await ApiService.getAll();
     setAllServices(data);
     setServices(data);
     setLoading(false);
@@ -24,7 +24,7 @@ const useServices = () => {
       setServices(allServices);
     } else {
       const filtered = allServices.filter((service) =>
-        service.nombre.toLowerCase().includes(keyword.toLowerCase())
+        service.oficio.toLowerCase().includes(keyword.toLowerCase())
       );
       setServices(filtered);
     }

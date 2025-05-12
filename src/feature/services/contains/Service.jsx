@@ -54,7 +54,7 @@ if (!service || !service.rut) return <p className="text-center text-lg">Cargando
           </p>
 
           {/* Botones de acción */}
-          <div className="flex flex-col sm:flex-row gap-4">
+          <div className="flex flex-col sm:flex-row gap-4 bg-gradient-to-r from-blue-500/50 to-purple-500/50 p-6 rounded">
             <button className="btn-primary" onClick={handleSolicitarServicio}>
               Solicitar servicio
             </button>

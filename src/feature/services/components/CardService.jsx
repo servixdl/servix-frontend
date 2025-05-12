@@ -1,3 +1,4 @@
+import React from "react";
 import PropTypes from "prop-types";
 // import formatToChileanPeso from "../../../utils/FormatNumber"; // Importa la utilidad
 
@@ -19,8 +20,8 @@ const CardService = ({ service }) => {
         {service.experiencia || "Sin experiencia registrada."}
       </div>
 
-      <button className="mt-4 bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-1.5 px-4 rounded-full shadow-sm text-sm">
-        Ver perfil
+      <button className="mt-4 bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-1.5 px-4 rounded-full shadow-sm text-sm cursor-pointer ">
+        Solicitar servicio
       </button>
     </div>
   );

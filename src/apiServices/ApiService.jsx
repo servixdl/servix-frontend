@@ -1,25 +1,54 @@
 
-const BASE_URL = "http://localhost:3000/services";
 import axios from "axios";
-const token =sessionStorage.getItem('token')
-const header = {headers:{Authorization: `Bearer ${token}`}}
+
+const BASE_URL = "http://localhost:3000/services";
+
+const getAuthHeader = () => {
+  const token = sessionStorage.getItem('token');
+  return token ? { headers: { Authorization: `Bearer ${token}` } } : {};
+};
 
 const ApiService = {
-  getAll :async  () =>{
-  const response = await axios.get(BASE_URL);
-  return response.data;
-},
-  getByName: async (keyword) =>{
-      const response = await axios.get(BASE_URL+'/name/'+keyword);
+  getAll: async () => {
+    try {
+      const response = await axios.get(BASE_URL);
       return response.data;
+    } catch (error) {
+      console.error("Error al obtener todos los servicios:", error);
+      throw error;
+    }
   },
+
+  getByName: async (keyword) => {
+    try {
+      const response = await axios.get(`${BASE_URL}/name/${keyword}`);
+      return response.data;
+    } catch (error) {
+      console.error(`Error al buscar servicio por nombre (${keyword}):`, error);
+      throw error;
+    }
+  },
+
   getById: async (id) => {
-      const response = await axios.get(BASE_URL+'/'+id);
+    try {
+      const response = await axios.get(`${BASE_URL}/${id}`);
       return response.data;
-},
-getByRut: async (rut) => {
-      const response = await axios.get(BASE_URL+'/servicesProvider/'+rut,header);
+    } catch (error) {
+      console.error(`Error al obtener servicio con ID ${id}:`, error);
+      throw error;
+    }
+  },
+
+  getByRut: async (rut) => {
+    try {
+      const response = await axios.get(`${BASE_URL}/servicesProvider/${rut}`, getAuthHeader());
       return response.data;
-}
-}
-export default ApiService
+    } catch (error) {
+      console.error(`Error al obtener servicios por RUT (${rut}):`, error);
+      throw error;
+    }
+  }
+};
+
+export default ApiService;
+
