@@ -36,11 +36,11 @@ export default function AllServicePage() {
                   <div>
                     <CardService
                       service={{
-                        image: service.imagen,
-                        name: service.nombre,
-                        price: service.precio,
-                        description: service.descripcion,
-                        id: service.id_servicio,
+                        imagen: service.imagen,
+                        nombre: service.nombre,
+                        oficio: service.oficio,
+                        expeciencia: service.expeciencia,
+                        
                       }}
                     />
                   </div>
