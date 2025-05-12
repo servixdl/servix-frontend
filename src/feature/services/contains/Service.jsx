@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useEffect } from "react";
-import ApiService from "../../../apiServices/ApiService";
-import formatToChileanPeso from "../../../utils/FormatNumber";
+import ApiSales from "../../../apiServices/ApiSales";
+// import formatToChileanPeso from "../../../utils/FormatNumber";
 import { useAuth } from "../../../context/AuthContext";
+
 
 export default function ServicePage() {
   const { id } = useParams();
@@ -13,7 +14,7 @@ export default function ServicePage() {
 
   useEffect(() => {
     const fetchService = async () => {
-      const response = await ApiService.getById(id);
+      const response = await ApiSales.getById(id);
       setService(response);
     };
     fetchService();
@@ -28,7 +29,8 @@ export default function ServicePage() {
     }
   };
 
-  if (!service) return <p className="text-center text-lg">Cargando...</p>;
+if (!service || !service.rut) return <p className="text-center text-lg">Cargando...</p>;
+
 
   return (
     <div className="p-4 max-w-6xl mx-auto mt-20">
@@ -36,19 +38,19 @@ export default function ServicePage() {
         <div className="md:w-1/2 w-full flex justify-center items-center">
           <img
             className="rounded-xl shadow-md max-h-96 object-cover"
-            src={service.imagen}
+            src={`http://localhost:3000/uploads/${service.imagen}`}
             alt="Imagen del servicio"
           />
         </div>
         <div className="md:w-1/2 w-full">
           <h2 className="text-2xl font-bold text-gray-800 mb-4">
-            {service.nombre}
+            {service.oficio}
           </h2>
           <p className="text-gray-600 mb-4 leading-relaxed">
-            {service.descripcion}
+            {service.nombre}
           </p>
           <p className="text-highlight text-2xl mb-6">
-            {formatToChileanPeso(service.precio)}
+            {service.experiencia}
           </p>
 
           {/* Botones de acción */}
@@ -82,6 +84,7 @@ export default function ServicePage() {
                 Iniciar sesión
               </Link>
             </div>
+            <p>{JSON.stringify(service)}</p>
           </div>
         </div>
       )}
