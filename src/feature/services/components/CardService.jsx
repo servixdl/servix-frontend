@@ -4,19 +4,25 @@ import PropTypes from "prop-types";
 
 const CardService = ({ service }) => {
   return (
-    <div className="bg-white rounded-xl shadow-sm hover:shadow-xl transition-shadow duration-300 p-5">
-      <img
-        className="rounded-xl shadow-md max-h-48 object-cover mb-4"
-        src={`http://localhost:3000/uploads/${service.imagen}`}
-        alt="Imagen del servicio"
-      />
-      <h2 className="text-lg font-bold text-gray-800 mb-2">{service.nombre}</h2>
-      <p className="text-gray-600 mb-4">{service.oficio}</p>
-      
-        <p className="text-highlight text-lg">
-         {service.experiencia}
-        </p>
-    
+   <div className="bg-white rounded-2xl shadow-md hover:shadow-xl transition duration-300 p-5 flex flex-col items-center text-center">
+      <div className="w-24 h-24 mb-4 rounded-full overflow-hidden border-4 border-gray-200 shadow-sm">
+        <img
+          src={`http://localhost:3000/uploads/${service.imagen}`}
+          alt={`Perfil de ${service.nombre}`}
+          className="w-full h-full object-cover"
+        />
+      </div>
+
+      <h2 className="text-xl font-semibold text-gray-800">{service.nombre}</h2>
+      <p className="text-sm text-indigo-600 font-medium mt-1">{service.oficio}</p>
+
+      <div className="mt-3 px-3 py-2 bg-gray-50 border border-gray-200 rounded-md shadow-inner w-full text-sm text-gray-700 leading-relaxed">
+        {service.experiencia || "Sin experiencia registrada."}
+      </div>
+
+      <button className="mt-4 bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-1.5 px-4 rounded-full shadow-sm text-sm">
+        Ver perfil
+      </button>
     </div>
   );
 };

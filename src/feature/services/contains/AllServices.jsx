@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 
 export default function AllServicePage() {
   const { services, search, loading } = useServices();
-
+console.log("Datos del servicio:", services);
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 p-6">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-6 animate-fadeIn">
@@ -39,7 +39,7 @@ export default function AllServicePage() {
                         imagen: service.imagen,
                         nombre: service.nombre,
                         oficio: service.oficio,
-                        expeciencia: service.expeciencia,
+                        experiencia: service.experiencia,
                         
                       }}
                     />
