@@ -40,14 +40,14 @@ export const AuthProvider = ({ children }) => {
       const rut = decoded.rut;
       const nombre = decoded.nombre;
       const fecha_nacimiento = decoded.fecha_nacimiento;
-      const servicio = decoded.servicio;
+      const vendedor = decoded.vendedor;
 
       // Guardar datos en sessionStorage
       sessionStorage.setItem("token", token);
       sessionStorage.setItem("rut", rut);
       sessionStorage.setItem("nombre", nombre);
       sessionStorage.setItem("fecha_nacimiento", fecha_nacimiento);
-      setserviceP(servicio)
+      setserviceP(vendedor)
       // Guardar usuario en el contexto
       setUser({ token, rut, nombre, fecha_nacimiento });
 
