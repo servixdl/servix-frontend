@@ -1,5 +1,5 @@
-
 import React from "react";
+import { servicePropTypes } from "./type";
 
 const CardService = ({ service }) => {
   return (
@@ -12,10 +12,14 @@ const CardService = ({ service }) => {
       <h2 className="text-lg font-bold text-gray-800 mb-2">{service.name}</h2>
       <p className="text-gray-600 mb-4">{service.description}</p>
       {service.price && (
-        <p className="text-highlight text-lg">Valor: ${service.price}</p>
+        <p className="text-highlight text-lg">Valor: {service.price}</p>
       )}
     </div>
   );
+};
+
+CardService.propTypes = {
+  service: servicePropTypes,
 };
 
 export default CardService;

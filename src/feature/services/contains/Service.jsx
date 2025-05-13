@@ -1,10 +1,14 @@
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
 import ApiService from "../../../apiServices/ApiService";
-import { Link } from "react-router-dom";
+import formatToChileanPeso from "../../../utils/FormatNumber";
+import LoginModal from "../components/LoginModal";
+
 export default function ServicePage() {
   const { id } = useParams();
   const [service, setService] = useState({});
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     const fetchService = async () => {
@@ -12,12 +16,23 @@ export default function ServicePage() {
       setService(response);
     };
     fetchService();
+
+    const userLoggedIn = Boolean(localStorage.getItem("userToken"));
+    setIsLoggedIn(userLoggedIn);
   }, [id]);
+
+  const handleRequestService = () => {
+    if (!isLoggedIn) {
+      setShowModal(true);
+    } else {
+      window.location.href = `/sale/${service.id_servicio}`;
+    }
+  };
 
   if (!service) return <p className="text-center text-lg">Cargando...</p>;
 
   return (
-    <div className="p-4 max-w-6xl mx-auto">
+    <div className="p-4 max-w-6xl mx-auto my-10">
       <div className="flex flex-col md:flex-row gap-6 bg-white rounded-xl shadow-lg p-6">
         <div className="md:w-1/2 w-full flex justify-center items-center">
           <img
@@ -33,16 +48,22 @@ export default function ServicePage() {
           <p className="text-gray-600 mb-4 leading-relaxed">
             {service.descripcion}
           </p>
-          <p className="text-highlight text-2xl mb-6">${service.precio}</p>
+          <p className="text-highlight text-2xl mb-6">
+            {formatToChileanPeso(service.precio)}
+          </p>
 
           {/* Botones de acción */}
           <div className="flex flex-col sm:flex-row gap-4">
-            <Link className="btn-primary" to={"/sale/"+service.id_servicio} key={service.id_servicio}>Solicitar servicio</Link>
-            <button className="btn-outline" >Valorar servicio</button>
+            <button className="btn-primary" onClick={handleRequestService}>
+              Solicitar servicio
+            </button>
+            <button className="btn-outline">Valorar servicio</button>
           </div>
         </div>
       </div>
+
+      {/* Modal */}
+      {showModal && <LoginModal onClose={() => setShowModal(false)} />}
     </div>
   );
 }
-
