@@ -18,10 +18,10 @@
 
 ## 🛠️ Tecnologías utilizadas
 
-- **Frontend:** React / Bootstrap  
-- **Backend:** Node.js / Express  
-- **Base de datos:** PostgreSQL  
-- **Autenticación:** JWT  
+- **Frontend:** React / Tailwind
+- **Backend:** Node.js / Express
+- **Base de datos:** PostgreSQL
+- **Autenticación:** JWT
 - **Deploy:** Netlify (frontend) / (backend)
 
 ---
