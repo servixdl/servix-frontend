@@ -24,7 +24,7 @@ const useServices = () => {
       setServices(allServices);
     } else {
       const filtered = allServices.filter((service) =>
-        service.oficio.toLowerCase().includes(keyword.toLowerCase())
+        service.nombre?.toLowerCase().includes(keyword.toLowerCase())
       );
       setServices(filtered);
     }
