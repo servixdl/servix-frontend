@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { useAuth } from "../../../context/AuthContext";
 import ApiService from "../../../apiServices/ApiService";
 import formatToChileanPeso from "../../../utils/FormatNumber";
 import LoginModal from "../components/LoginModal";
 
 export default function ServicePage() {
   const { id } = useParams();
+  const { isAuthenticated } = useAuth();
   const [service, setService] = useState({});
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
@@ -16,13 +17,10 @@ export default function ServicePage() {
       setService(response);
     };
     fetchService();
-
-    const userLoggedIn = Boolean(localStorage.getItem("userToken"));
-    setIsLoggedIn(userLoggedIn);
   }, [id]);
 
   const handleRequestService = () => {
-    if (!isLoggedIn) {
+    if (!isAuthenticated) {
       setShowModal(true);
     } else {
       window.location.href = `/sale/${service.id_servicio}`;
