@@ -31,7 +31,7 @@ export default function Sale(){
           const responseSale =await ApiSales.create(ventaData)
           
             const citaData = {
-                venta_id:responseSale.saleId,
+                venta_id:responseSale.id_venta,
                 servicio_id: service.id_servicio, 
                 fecha_cita: fechaCita,
                 hora_inicio: horaInicio,

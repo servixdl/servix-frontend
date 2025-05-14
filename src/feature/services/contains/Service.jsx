@@ -4,6 +4,7 @@ import { useAuth } from "../../../context/AuthContext";
 import ApiService from "../../../apiServices/ApiService";
 import formatToChileanPeso from "../../../utils/FormatNumber";
 import LoginModal from "../components/LoginModal";
+import { Link } from "react-router-dom";
 
 export default function ServicePage() {
   const { id } = useParams();
@@ -52,9 +53,7 @@ export default function ServicePage() {
 
           {/* Botones de acción */}
           <div className="flex flex-col sm:flex-row gap-4">
-            <button className="btn-primary" onClick={handleRequestService}>
-              Solicitar servicio
-            </button>
+             <Link className="btn-primary" to={"/sale/"+service.id_servicio} key={service.id_servicio}>Solicitar servicio</Link>
             <button className="btn-outline">Valorar servicio</button>
           </div>
         </div>

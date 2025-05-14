@@ -66,6 +66,7 @@ const CreateServiceModal = ({ isOpen, onClose, onAdd }) => {
         Completa los campos a continuación para crear tu servicio:
       </p>
       <div className="flex flex-col gap-3">
+        <label className="block text-sm font-medium text-gray-700">Nombre</label>
         <input
           name="nombre"
           placeholder="Nombre del servicio"
@@ -73,6 +74,7 @@ const CreateServiceModal = ({ isOpen, onClose, onAdd }) => {
           value={form.nombre}
           onChange={handleChange}
         />
+        <label className="block text-sm font-medium text-gray-700">Descripción</label>
         <textarea
           name="descripcion"
           placeholder="Descripción detallada del servicio"
@@ -80,6 +82,7 @@ const CreateServiceModal = ({ isOpen, onClose, onAdd }) => {
           value={form.descripcion}
           onChange={handleChange}
         />
+        <label className="block text-sm font-medium text-gray-700">Precio</label>
         <input
           name="precio"
           type="number"
@@ -88,6 +91,7 @@ const CreateServiceModal = ({ isOpen, onClose, onAdd }) => {
           value={form.precio}
           onChange={handleChange}
         />
+          <label className="block text-sm font-medium text-gray-700">Imagen (URL)</label>
         <input
           name="imagen"
           placeholder="URL de la imagen"
