@@ -65,6 +65,14 @@ export default function Navbar() {
           ) : (
             <></>
           )}
+          {user && (
+            <Link
+              to="/servicios-solicitados"
+              className="text-sm hover:underline"
+            >
+              Servicios Solicitados
+            </Link>
+          )}
         </nav>
 
         <div className="hidden md:flex items-center gap-3">
