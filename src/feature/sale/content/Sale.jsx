@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import ApiService from "../../../apiServices/ApiService";
 import ApiSales from "../../../apiServices/ApiSales";
 import ApiAppointment from "../../../apiServices/ApiAppointment";
+import axios from "axios";
 export default function Sale(){
     const {id} = useParams();
     const [service, setService] = useState(null);
@@ -19,6 +20,21 @@ export default function Sale(){
         fetchService();
       }, [id]);
     
+
+      const handleBuy = async (precio) =>{
+        try{
+          const response = await axios.post('http://localhost:3000/webpay/crear',{
+            amount:precio,
+          });
+        const  {url,token} =response.data;
+
+        window.location.href = `${url}?token_ws=${token}`;
+        }catch(error){
+          console.error('Error al crear  transaccion',error)
+        }
+      }
+     
+
     const handleAppointment = async () =>{
         try {
           const ventaData = {
@@ -27,10 +43,11 @@ export default function Sale(){
             fecha_venta: new Date().toISOString().split('T')[0], // YYYY-MM-DD
             total: service.precio
           };
-          console.log(ventaData)
-          const responseSale =await ApiSales.create(ventaData)
           
-            const citaData = {
+          const responseSale =await ApiSales.create(ventaData)
+          console.log(responseSale)
+          handleBuy(service.precio);  
+          const citaData = {
                 venta_id:responseSale.id_venta,
                 servicio_id: service.id_servicio, 
                 fecha_cita: fechaCita,
@@ -39,9 +56,10 @@ export default function Sale(){
                 usuario_id: rut, 
                 estado: "pendiente"
               };
-             console.log(citaData)
+             
               const responseAppointment = await ApiAppointment.create(citaData);
-
+              console.log(responseAppointment);
+              
               setMensaje("Cita y venta creadas exitosamente.");
         } catch (error) {
             setMensaje("Ocurrió un error al crear la cita.");
