@@ -20,14 +20,6 @@ export default function ServicePage() {
     fetchService();
   }, [id]);
 
-  const handleRequestService = () => {
-    if (!isAuthenticated) {
-      setShowModal(true);
-    } else {
-      window.location.href = `/sale/${service.id_servicio}`;
-    }
-  };
-
   if (!service) return <p className="text-center text-lg">Cargando...</p>;
 
   return (
@@ -53,7 +45,19 @@ export default function ServicePage() {
 
           {/* Botones de acción */}
           <div className="flex flex-col sm:flex-row gap-4">
-             <Link className="btn-primary" to={"/sale/"+service.id_servicio} key={service.id_servicio}>Solicitar servicio</Link>
+            <Link
+              className="btn-primary"
+              to={isAuthenticated ? `/sale/${service.id_servicio}` : "#"}
+              onClick={(e) => {
+                if (!isAuthenticated) {
+                  e.preventDefault();
+                  setShowModal(true);
+                }
+              }}
+              key={service.id_servicio}
+            >
+              Solicitar servicio
+            </Link>
             <button className="btn-outline">Valorar servicio</button>
           </div>
         </div>

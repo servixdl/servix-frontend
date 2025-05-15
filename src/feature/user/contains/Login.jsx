@@ -1,12 +1,11 @@
 // src/pages/LoginPage.jsx
-import React from 'react';
+import React from "react";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import InputField from "../../../utils/InputField";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useAuth } from "../../../context/AuthContext.jsx";
-
+import InputField from "../../../components/InputField.jsx";
 
 const emailFormat = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
 
@@ -15,7 +14,7 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const { login } = useAuth();
   const location = useLocation();
- 
+
   useEffect(() => {
     if (location.state?.error) {
       toast.error(location.state.error);
@@ -39,7 +38,7 @@ export default function LoginPage() {
       return toast.error("Formato de correo inválido.");
     }
 
-    login(email, password); 
+    login(email, password);
   };
 
   return (
