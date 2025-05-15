@@ -8,7 +8,7 @@ export default function Navbar() {
   const { user, logout } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
   const { serviceP } = useContext(ServiceProviderContext);
-  console.log(serviceP)
+  console.log(serviceP);
   const buttons = (
     ruta1,
     nombre1,
@@ -63,6 +63,14 @@ export default function Navbar() {
             </>
           ) : (
             <></>
+          )}
+          {user && (
+            <Link
+              to="/servicios-solicitados"
+              className="text-sm hover:underline"
+            >
+              Servicios Solicitados
+            </Link>
           )}
         </nav>
 

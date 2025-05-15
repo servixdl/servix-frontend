@@ -9,6 +9,7 @@ import PerfilUsuario from "../feature/user/contains/ProfileUser.jsx";
 import PrivateRoute from "../components/PrivateRoute.jsx";
 import NotFound from "../feature/notFound/NotFound.jsx";
 import Sale from "../feature/sale/content/Sale.jsx";
+import ServiceSolic from "../../src/feature/services/contains/ServiceSolic.jsx"
 import MyServices from "../feature/myServices/contens/MyServices.jsx";
 import { useContext } from "react";
 import { TokenContext } from "../context/tokenContext.jsx";
@@ -34,6 +35,14 @@ function Navigation() {
         }
       />
       <Route path="*" element={<NotFound />} />
+      <Route
+        path="/servicios-solicitados"
+        element={
+          <PrivateRoute>
+            <ServiceSolic />
+          </PrivateRoute>
+        }
+      />
     </Routes>
   );
 }
