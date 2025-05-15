@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
 import React from "react";
 import { ServiceProviderContext } from "../context/serviceProviderContext.jsx";
+import Swal from "sweetalert2";
 export default function Navbar() {
   const { user, logout } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -91,8 +92,15 @@ export default function Navbar() {
                 "/",
                 "Cerrar sesión",
                 "btn-primary",
-                () => {
-                  if (confirm("¿Estás seguro que deseas cerrar sesión?")) {
+                async () => {
+                  const result = await Swal.fire({
+                    title: "¿Estás seguro que deseas cerrar sesión?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Sí, cerrar sesión",
+                    cancelButtonText: "Cancelar",
+                  });
+                  if (result.isConfirmed) {
                     logout();
                   }
                 }
@@ -136,8 +144,15 @@ export default function Navbar() {
                   "/",
                   "Cerrar sesión",
                   "btn-primary w-full",
-                  () => {
-                    if (confirm("¿Estás seguro que deseas cerrar sesión?")) {
+                  async () => {
+                    const result = await Swal.fire({
+                      title: "¿Estás seguro que deseas cerrar sesión?",
+                      icon: "warning",
+                      showCancelButton: true,
+                      confirmButtonText: "Sí, cerrar sesión",
+                      cancelButtonText: "Cancelar",
+                    });
+                    if (result.isConfirmed) {
                       logout();
                     }
                   }
