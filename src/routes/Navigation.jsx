@@ -14,6 +14,7 @@ import MyServices from "../feature/myServices/contens/MyServices.jsx";
 import { useContext } from "react";
 import { TokenContext } from "../context/tokenContext.jsx";
 import ContactPage from "../feature/contact/Contact.jsx";
+import SalePay from "../feature/sale/content/SalePay.jsx";
 function Navigation() {
   const { token } = useContext(TokenContext);
   return (
@@ -26,6 +27,7 @@ function Navigation() {
       <Route path="/sale/:id" element={!token ? <Home /> : <Sale />} />
       <Route path="/myServices" element={!token ? <Home /> : <MyServices />} />
       <Route path="/contact" element={<ContactPage />} />
+      <Route path="/salePay" element={<SalePay />} />
       <Route
         path="/perfil"
         element={

@@ -8,7 +8,7 @@ const ApiAppointment = {
     return response.data;
   },
   getById: async (id) => {
-    const response = await axios.get(BASE_URL + "/" + id, getAuthHeader());
+    const response = await axios.get(`${BASE_URL}/${id}`, getAuthHeader());
     return response.data;
   },
   getAll: async () => {

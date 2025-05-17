@@ -2,52 +2,73 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import ApiService from "../../../apiServices/ApiService";
-import ApiSales from "../../../apiServices/ApiSales";
-import ApiAppointment from "../../../apiServices/ApiAppointment";
-export default function Sale() {
-  const { id } = useParams();
-  const [service, setService] = useState(null);
-  const [fechaCita, setFechaCita] = useState("");
-  const [horaInicio, setHoraInicio] = useState("");
-  const [horaTermino, setHoraTermino] = useState("");
-  const [mensaje, setMensaje] = useState("");
-  const rut = sessionStorage.getItem("rut");
-  useEffect(() => {
-    const fetchService = async () => {
-      const response = await ApiService.getById(id);
-      setService(response);
-    };
-    fetchService();
-  }, [id]);
+import axios from "axios";
+export default function Sale(){
+    const {id} = useParams();
+    const [service, setService] = useState(null);
+    const [fechaCita, setFechaCita] = useState("");
+    const [horaInicio, setHoraInicio] = useState("");
+    const [horaTermino, setHoraTermino] = useState("");
+    const [mensaje, setMensaje] = useState("");
+    const rut = sessionStorage.getItem("rut")
+    useEffect(() => {
+        const fetchService = async () => {
+          const response = await ApiService.getById(id);
+          setService(response);
+        };
+        fetchService();
+      }, [id]);
+    
 
-  const handleAppointment = async () => {
-    try {
-      const ventaData = {
-        usuario_id: rut,
-        servicio_id: service.id_servicio,
-        fecha_venta: new Date().toISOString().split("T")[0], // YYYY-MM-DD
-        total: service.precio,
-      };
-      console.log(ventaData);
-      const responseSale = await ApiSales.create(ventaData);
+      const handleBuy = async (amount,venta) =>{
+        try{
+          const response = await axios.post('http://localhost:3000/webpay/crear',{
+            amount,venta,
+          });
+        const  {url,token} =response.data;
 
-      const citaData = {
-        venta_id: responseSale.id_venta,
-        servicio_id: service.id_servicio,
-        fecha_cita: fechaCita,
-        hora_inicio: horaInicio,
-        hora_termino: horaTermino,
-        usuario_id: rut,
-        estado: "pendiente",
-      };
-      console.log(citaData);
-      await ApiAppointment.create(citaData);
+        window.location.href = `${url}?token_ws=${token}`;
+        }catch(error){
+          console.error('Error al crear  transaccion',error)
+        }
+      }
+     
 
-      setMensaje("Cita y venta creadas exitosamente.");
-    } catch (error) {
-      setMensaje("Ocurrió un error al crear la cita."), error;
-    }
-  };
+    const handleAppointment = async () =>{
+        if (!fechaCita || !horaInicio || !horaTermino) {
+    setMensaje("Por favor, completa todos los campos de la cita.");
+    return;
+  }
+
+  if (!service) {
+    setMensaje("El servicio no está disponible.");
+    return;
+  }
+
+  if (!rut) {
+    setMensaje("Debes iniciar sesión para continuar.");
+    return;
+  }
+
+        try {
+          const venta = {
+            amount:service.precio,
+            usuario_id: rut,
+            servicio_id: service.id_servicio,
+            fecha_cita: fechaCita,
+            hora_inicio: horaInicio,
+            hora_termino: horaTermino,
+            estado: "pendiente"
+          };
+
+             handleBuy(venta.amount,venta);  
+              
+              setMensaje("Cita y venta creadas exitosamente.");
+        } catch (error) {
+            setMensaje("Ocurrió un error al crear la cita."),error;
+        }
+    }  
+
 
   if (!service) return <p className="text-center text-lg">Cargando...</p>;
   return (
@@ -114,4 +135,4 @@ export default function Sale() {
       </div>
     </div>
   );
-}
+};
