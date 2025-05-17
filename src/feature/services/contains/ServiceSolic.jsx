@@ -86,7 +86,7 @@ function ServiceSolic() {
           </thead>
           <tbody>
             {servicios.map((s) => (
-              <tr key={d_servicio} className="hover:bg-gray-50">
+              <tr key={s.id_servicio} className="hover:bg-gray-50">
                 <td className="px-4 py-2 border">{s.nombre_servicio}</td>
                 <td className="px-4 py-2 border">{s.tipo_servicio}</td>
                 <td className="px-4 py-2 border">{s.descripcion}</td>
