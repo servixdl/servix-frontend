@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import React from "react";
-import SelectField from "../../../components/SelectField.jsx";
 import { useRut } from "../../../hooks/useRut";
 import { ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
@@ -8,7 +7,9 @@ import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import { ENDPOINT } from "../../../config/constans.js";
 import Swal from "sweetalert2";
-import InputField from "../../../components/InputField.jsx";
+import InputField from "../../../components/atomic/InputField.jsx";
+import SelectField from "../../../components/atomic/SelectField.jsx";
+import FormLayout from "../../../layouts/FormsLayouts.jsx";
 
 // Lista de años desde 1930 hasta el año actual
 const currentYear = new Date().getFullYear();
@@ -171,7 +172,7 @@ export default function RegisterPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-gray-100 flex items-center justify-center">
+    <FormLayout>
       <form
         onSubmit={handleSubmit}
         className="w-full max-w-sm bg-white p-8 rounded-xl shadow-md"
@@ -266,6 +267,6 @@ export default function RegisterPage() {
         </button>
       </form>
       <ToastContainer />
-    </div>
+    </FormLayout>
   );
 }

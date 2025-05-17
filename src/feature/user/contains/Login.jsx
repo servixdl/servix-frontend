@@ -5,7 +5,8 @@ import { useLocation } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useAuth } from "../../../context/AuthContext.jsx";
-import InputField from "../../../components/InputField.jsx";
+import InputField from "../../../components/atomic/InputField.jsx";
+import FormLayout from "../../../layouts/FormsLayouts.jsx";
 
 const emailFormat = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
 
@@ -42,7 +43,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-gray-100 flex items-center justify-center">
+    <FormLayout>
       <form
         onSubmit={handleSubmit}
         className="w-full max-w-sm bg-white p-8 rounded-xl shadow-md"
@@ -80,6 +81,6 @@ export default function LoginPage() {
         </button>
       </form>
       <ToastContainer />
-    </div>
+    </FormLayout>
   );
 }
