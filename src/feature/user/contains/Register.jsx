@@ -1,13 +1,14 @@
-import {useEffect, useState } from "react";
-import React from 'react';
-import InputField from "../../../utils/InputField";
-import SelectField from "../../../utils/SelectField";
+import { useEffect, useState } from "react";
+import React from "react";
+import SelectField from "../../../components/SelectField.jsx";
 import { useRut } from "../../../hooks/useRut";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
-import {ENDPOINT} from "../../../config/constans.js" 
+import { ENDPOINT } from "../../../config/constans.js";
+import Swal from "sweetalert2";
+import InputField from "../../../components/InputField.jsx";
 
 // Lista de años desde 1930 hasta el año actual
 const currentYear = new Date().getFullYear();
@@ -97,56 +98,77 @@ export default function RegisterPage() {
    */
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { rut, name, email, password, confirmPassword, day, month, year } = form;
-  
-    if (!rut || !name || !email || !password || !confirmPassword || !day || !month || !year) {
+    const { rut, name, email, password, confirmPassword, day, month, year } =
+      form;
+
+    if (
+      !rut ||
+      !name ||
+      !email ||
+      !password ||
+      !confirmPassword ||
+      !day ||
+      !month ||
+      !year
+    ) {
       return setError("Todos los campos son obligatorios.");
     }
-  
+
     if (!emailFormat.test(email)) {
       return setError("El formato del email no es correcto!");
     }
-  
+
     if (password !== confirmPassword) {
       return setError("Las contraseñas no coinciden.");
     }
-  
+
     const passwordError = validatePassword(password);
     if (passwordError) {
       return setError(passwordError);
     }
-  
+
     if (!validateAge(year, month, day)) {
       return setError("Debes tener al menos 18 años.");
     }
-  
-    const fecha_nacimiento = `${String(year).padStart(4, '0')}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-  
+
+    const fecha_nacimiento = `${String(year).padStart(4, "0")}-${String(
+      month
+    ).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+
     try {
       await axios.post(ENDPOINT.register, {
         rut: String(rut),
         nombre: String(name),
         fecha_nacimiento: String(fecha_nacimiento),
         correo: String(email),
-        contrasena: String(password)
-       
+        contrasena: String(password),
       });
-  
-      toast.success("Usuario registrado con éxito 😀");
-      navigate("/login");
+
+      Swal.fire({
+        title: "¡Registro exitoso!",
+        text: "Tu cuenta ha sido creada correctamente.",
+        icon: "success",
+        confirmButtonText: "Ir al login",
+      }).then(() => {
+        navigate("/login");
+      });
     } catch (error) {
       const msg = error?.response?.data?.message || "Error al registrar.";
-      toast.error(`${msg} 🙁`);
+
+      Swal.fire({
+        title: "Error",
+        text: `${msg}`,
+        icon: "error",
+        confirmButtonText: "Intentar de nuevo",
+      });
     }
   };
-  
-  
-  
+
   useEffect(() => {
-    if (window.sessionStorage.getItem('token')) {
-      navigate('/perfil')
+    if (window.sessionStorage.getItem("token")) {
+      navigate("/perfil");
     }
-  }, [])
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-gray-100 flex items-center justify-center">

@@ -1,14 +1,6 @@
 const BASE_URL = "http://localhost:3000/sales";
 import axios from "axios";
-
-const getAuthHeader = () => {
-  const token = sessionStorage.getItem("token");
-  return {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  };
-};
+import { getAuthHeader } from "./GetAuthHeader";
 
 const ApiSales = {
   create: async (sale) => {
@@ -23,7 +15,6 @@ const ApiSales = {
     const response = await axios.get(BASE_URL, getAuthHeader());
     return response.data;
   },
-
 };
 
 export default ApiSales;

@@ -1,4 +1,6 @@
+import React from "react";
 import constructor from "../../../assets/images/constrructor.jpg";
+import { Link } from "react-router-dom";
 
 export default function Hero() {
   return (
@@ -13,9 +15,9 @@ export default function Hero() {
             Encuentra los mejores servicios a tu alcance, rápido y fácil.
           </p>
           <div className="flex flex-col sm:flex-row justify-center lg:justify-start gap-4">
-            <button type="button" className="btn-primary">
+            <Link to="/allservice" type="button" className="btn-primary">
               Explorar Servicios
-            </button>
+            </Link>
             <button type="button" className="btn-outline">
               Ofrecer un servicio
             </button>
