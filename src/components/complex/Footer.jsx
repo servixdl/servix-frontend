@@ -22,9 +22,6 @@ export default function Footer() {
             <Link to="/offerservice" className="hover:underline">
               Ofrecer Servicio
             </Link>
-            <Link to="contact" className="hover:underline">
-              Contacto
-            </Link>
           </div>
         </div>
 

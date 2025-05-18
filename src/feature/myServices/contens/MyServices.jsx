@@ -6,6 +6,7 @@ import CreateServiceModal from "../components/modalNewService";
 import EditServiceModal from "../components/ModalUpdateService";
 import { toast } from "react-toastify";
 import Button from "../../../components/atomic/Button";
+import Swal from "sweetalert2";
 export default function MyServices() {
   const { loading, myServices } = UseMyService();
   const [services, setServices] = useState(myServices);
@@ -26,10 +27,21 @@ export default function MyServices() {
     setServices(myServices);
   };
 
-  const handleDelete = (id) => {
-    if (window.confirm("¿Estás seguro de eliminar este servicio?")) {
+  const handleDelete = async (id) => {
+    const result = await Swal.fire({
+      title: "¿Estás seguro?",
+      text: "Esta acción eliminará el servicio.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Sí, eliminar",
+      cancelButtonText: "Cancelar",
+    });
+
+    if (result.isConfirmed) {
       try {
-        ApiService.delete(id);
+        await ApiService.delete(id);
         setServices((prev) => prev.filter((s) => s.id_servicio !== id));
         toast.success("Servicio eliminado exitosamente");
       } catch (error) {
