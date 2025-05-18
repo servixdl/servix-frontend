@@ -1,13 +1,15 @@
-import {useEffect, useState } from "react";
-import React from 'react';
-import InputField from "../../../utils/InputField";
-import SelectField from "../../../utils/SelectField";
+import { useEffect, useState } from "react";
+import React from "react";
 import { useRut } from "../../../hooks/useRut";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
-import {ENDPOINT} from "../../../config/constans.js" 
+import { ENDPOINT } from "../../../config/constans.js";
+import Swal from "sweetalert2";
+import InputField from "../../../components/atomic/InputField.jsx";
+import SelectField from "../../../components/atomic/SelectField.jsx";
+import FormLayout from "../../../layouts/FormsLayouts.jsx";
 
 // Lista de años desde 1930 hasta el año actual
 const currentYear = new Date().getFullYear();
@@ -97,59 +99,80 @@ export default function RegisterPage() {
    */
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { rut, name, email, password, confirmPassword, day, month, year } = form;
-  
-    if (!rut || !name || !email || !password || !confirmPassword || !day || !month || !year) {
+    const { rut, name, email, password, confirmPassword, day, month, year } =
+      form;
+
+    if (
+      !rut ||
+      !name ||
+      !email ||
+      !password ||
+      !confirmPassword ||
+      !day ||
+      !month ||
+      !year
+    ) {
       return setError("Todos los campos son obligatorios.");
     }
-  
+
     if (!emailFormat.test(email)) {
       return setError("El formato del email no es correcto!");
     }
-  
+
     if (password !== confirmPassword) {
       return setError("Las contraseñas no coinciden.");
     }
-  
+
     const passwordError = validatePassword(password);
     if (passwordError) {
       return setError(passwordError);
     }
-  
+
     if (!validateAge(year, month, day)) {
       return setError("Debes tener al menos 18 años.");
     }
-  
-    const fecha_nacimiento = `${String(year).padStart(4, '0')}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-  
+
+    const fecha_nacimiento = `${String(year).padStart(4, "0")}-${String(
+      month
+    ).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+
     try {
       await axios.post(ENDPOINT.register, {
         rut: String(rut),
         nombre: String(name),
         fecha_nacimiento: String(fecha_nacimiento),
         correo: String(email),
-        contrasena: String(password)
-       
+        contrasena: String(password),
       });
-  
-      toast.success("Usuario registrado con éxito 😀");
-      navigate("/login");
+
+      Swal.fire({
+        title: "¡Registro exitoso!",
+        text: "Tu cuenta ha sido creada correctamente.",
+        icon: "success",
+        confirmButtonText: "Ir al login",
+      }).then(() => {
+        navigate("/login");
+      });
     } catch (error) {
       const msg = error?.response?.data?.message || "Error al registrar.";
-      toast.error(`${msg} 🙁`);
+
+      Swal.fire({
+        title: "Error",
+        text: `${msg}`,
+        icon: "error",
+        confirmButtonText: "Intentar de nuevo",
+      });
     }
   };
-  
-  
-  
+
   useEffect(() => {
-    if (window.sessionStorage.getItem('token')) {
-      navigate('/perfil')
+    if (window.sessionStorage.getItem("token")) {
+      navigate("/perfil");
     }
-  }, [])
+  }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-gray-100 flex items-center justify-center">
+    <FormLayout>
       <form
         onSubmit={handleSubmit}
         className="w-full max-w-sm bg-white p-8 rounded-xl shadow-md"
@@ -193,21 +216,27 @@ export default function RegisterPage() {
               label="Día"
               value={form.day}
               onChange={handleChange}
-              options={Array.from({ length: 31 }, (_, i) => i + 1)}
+              options={Array.from({ length: 31 }, (_, i) => ({
+                value: i + 1,
+                label: i + 1,
+              }))}
             />
             <SelectField
               name="month"
               label="Mes"
               value={form.month}
               onChange={handleChange}
-              options={Array.from({ length: 12 }, (_, i) => i + 1)}
+              options={Array.from({ length: 12 }, (_, i) => ({
+                value: i + 1,
+                label: i + 1,
+              }))}
             />
             <SelectField
               name="year"
               label="Año"
               value={form.year}
               onChange={handleChange}
-              options={years}
+              options={years.map((y) => ({ value: y, label: y }))}
             />
           </div>
         </div>
@@ -244,6 +273,6 @@ export default function RegisterPage() {
         </button>
       </form>
       <ToastContainer />
-    </div>
+    </FormLayout>
   );
 }

@@ -1,3 +1,4 @@
+import React from "react";
 import { Link } from "react-router-dom";
 
 export default function Footer() {
@@ -20,9 +21,6 @@ export default function Footer() {
             </Link>
             <Link to="/offerservice" className="hover:underline">
               Ofrecer Servicio
-            </Link>
-            <Link to="contact" className="hover:underline">
-              Contacto
             </Link>
           </div>
         </div>

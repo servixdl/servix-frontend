@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
-import Modal from "../../../components/Modal";
+
 import ApiTypesServices from "../../../apiServices/ApiTypesServices";
 import ApiService from "../../../apiServices/ApiService";
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Modal from "../../../components/complex/Modal";
+import Button from "../../../components/atomic/Button";
 
 const CreateServiceModal = ({ isOpen, onClose, onAdd }) => {
   const rut = sessionStorage.getItem("rut");
@@ -66,6 +68,9 @@ const CreateServiceModal = ({ isOpen, onClose, onAdd }) => {
         Completa los campos a continuación para crear tu servicio:
       </p>
       <div className="flex flex-col gap-3">
+        <label className="block text-sm font-medium text-gray-700">
+          Nombre
+        </label>
         <input
           name="nombre"
           placeholder="Nombre del servicio"
@@ -73,6 +78,9 @@ const CreateServiceModal = ({ isOpen, onClose, onAdd }) => {
           value={form.nombre}
           onChange={handleChange}
         />
+        <label className="block text-sm font-medium text-gray-700">
+          Descripción
+        </label>
         <textarea
           name="descripcion"
           placeholder="Descripción detallada del servicio"
@@ -80,6 +88,9 @@ const CreateServiceModal = ({ isOpen, onClose, onAdd }) => {
           value={form.descripcion}
           onChange={handleChange}
         />
+        <label className="block text-sm font-medium text-gray-700">
+          Precio
+        </label>
         <input
           name="precio"
           type="number"
@@ -88,6 +99,9 @@ const CreateServiceModal = ({ isOpen, onClose, onAdd }) => {
           value={form.precio}
           onChange={handleChange}
         />
+        <label className="block text-sm font-medium text-gray-700">
+          Imagen (URL)
+        </label>
         <input
           name="imagen"
           placeholder="URL de la imagen"
@@ -107,19 +121,13 @@ const CreateServiceModal = ({ isOpen, onClose, onAdd }) => {
             </option>
           ))}
         </select>
-        <div className="flex justify-between mt-4">
-          <button
-            onClick={handleSubmit}
-            className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
-          >
+        <div className="flex justify-between mt-4 gap-4">
+          <Button onClick={handleSubmit} variant="primary">
             Agregar
-          </button>
-          <button
-            onClick={onClose}
-            className="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500"
-          >
+          </Button>
+          <Button onClick={onClose} variant="outline">
             Cancelar
-          </button>
+          </Button>
         </div>
       </div>
     </Modal>

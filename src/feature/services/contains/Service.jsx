@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { useAuth } from "../../../context/AuthContext";
 import ApiService from "../../../apiServices/ApiService";
 import formatToChileanPeso from "../../../utils/FormatNumber";
 import LoginModal from "../components/LoginModal";
+import { Link } from "react-router-dom";
 
 export default function ServicePage() {
   const { id } = useParams();
+  const { isAuthenticated } = useAuth();
   const [service, setService] = useState({});
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
@@ -16,18 +18,7 @@ export default function ServicePage() {
       setService(response);
     };
     fetchService();
-
-    const userLoggedIn = Boolean(localStorage.getItem("userToken"));
-    setIsLoggedIn(userLoggedIn);
   }, [id]);
-
-  const handleRequestService = () => {
-    if (!isLoggedIn) {
-      setShowModal(true);
-    } else {
-      window.location.href = `/sale/${service.id_servicio}`;
-    }
-  };
 
   if (!service) return <p className="text-center text-lg">Cargando...</p>;
 
@@ -54,10 +45,19 @@ export default function ServicePage() {
 
           {/* Botones de acción */}
           <div className="flex flex-col sm:flex-row gap-4">
-            <button className="btn-primary" onClick={handleRequestService}>
+            <Link
+              className="btn-primary"
+              to={isAuthenticated ? `/sale/${service.id_servicio}` : "#"}
+              onClick={(e) => {
+                if (!isAuthenticated) {
+                  e.preventDefault();
+                  setShowModal(true);
+                }
+              }}
+              key={service.id_servicio}
+            >
               Solicitar servicio
-            </button>
-            <button className="btn-outline">Valorar servicio</button>
+            </Link>
           </div>
         </div>
       </div>

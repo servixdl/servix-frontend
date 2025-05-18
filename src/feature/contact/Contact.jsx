@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import InputField from "../../utils/InputField";
+import InputField from "../../components/atomic/InputField";
 
 export default function ContactPage() {
   const [form, setForm] = useState({ name: "", email: "", message: "" });
