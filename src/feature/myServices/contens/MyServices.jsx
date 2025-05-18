@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import ApiService from "../../../apiServices/ApiService";
 import UseMyService from "../hooks/UseMyService";
 import { useState } from "react";
-import CreateServiceModal from "../components/modalNewService";
+import CreateServiceModal from "../components/ModalNewService";
 import EditServiceModal from "../components/ModalUpdateService";
 import { toast } from "react-toastify";
 import Button from "../../../components/atomic/Button";
