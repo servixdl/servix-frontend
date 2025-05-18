@@ -3,72 +3,71 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import ApiService from "../../../apiServices/ApiService";
 import axios from "axios";
-export default function Sale(){
-    const {id} = useParams();
-    const [service, setService] = useState(null);
-    const [fechaCita, setFechaCita] = useState("");
-    const [horaInicio, setHoraInicio] = useState("");
-    const [horaTermino, setHoraTermino] = useState("");
-    const [mensaje, setMensaje] = useState("");
-    const rut = sessionStorage.getItem("rut")
-    useEffect(() => {
-        const fetchService = async () => {
-          const response = await ApiService.getById(id);
-          setService(response);
-        };
-        fetchService();
-      }, [id]);
-    
+import formatToChileanPeso from "../../../utils/FormatNumber";
+export default function Sale() {
+  const { id } = useParams();
+  const [service, setService] = useState(null);
+  const [fechaCita, setFechaCita] = useState("");
+  const [horaInicio, setHoraInicio] = useState("");
+  const [horaTermino, setHoraTermino] = useState("");
+  const [mensaje, setMensaje] = useState("");
+  const rut = sessionStorage.getItem("rut");
+  useEffect(() => {
+    const fetchService = async () => {
+      const response = await ApiService.getById(id);
+      setService(response);
+    };
+    fetchService();
+  }, [id]);
 
-      const handleBuy = async (amount,venta) =>{
-        try{
-          const response = await axios.post('http://localhost:3000/webpay/crear',{
-            amount,venta,
-          });
-        const  {url,token} =response.data;
+  const handleBuy = async (amount, venta) => {
+    try {
+      const response = await axios.post("http://localhost:3000/webpay/crear", {
+        amount,
+        venta,
+      });
+      const { url, token } = response.data;
 
-        window.location.href = `${url}?token_ws=${token}`;
-        }catch(error){
-          console.error('Error al crear  transaccion',error)
-        }
-      }
-     
+      window.location.href = `${url}?token_ws=${token}`;
+    } catch (error) {
+      console.error("Error al crear  transaccion", error);
+    }
+  };
 
-    const handleAppointment = async () =>{
-        if (!fechaCita || !horaInicio || !horaTermino) {
-    setMensaje("Por favor, completa todos los campos de la cita.");
-    return;
-  }
+  const handleAppointment = async () => {
+    if (!fechaCita || !horaInicio || !horaTermino) {
+      setMensaje("Por favor, completa todos los campos de la cita.");
+      return;
+    }
 
-  if (!service) {
-    setMensaje("El servicio no está disponible.");
-    return;
-  }
+    if (!service) {
+      setMensaje("El servicio no está disponible.");
+      return;
+    }
 
-  if (!rut) {
-    setMensaje("Debes iniciar sesión para continuar.");
-    return;
-  }
+    if (!rut) {
+      setMensaje("Debes iniciar sesión para continuar.");
+      return;
+    }
 
-        try {
-          const venta = {
-            amount:service.precio,
-            usuario_id: rut,
-            servicio_id: service.id_servicio,
-            fecha_cita: fechaCita,
-            hora_inicio: horaInicio,
-            hora_termino: horaTermino,
-            estado: "pendiente"
-          };
+    try {
+      const venta = {
+        amount: service.precio,
+        usuario_id: rut,
+        servicio_id: service.id_servicio,
+        fecha_cita: fechaCita,
+        hora_inicio: horaInicio,
+        hora_termino: horaTermino,
+        estado: "pendiente",
+      };
 
-             handleBuy(venta.amount,venta);  
-              
-              setMensaje("Cita y venta creadas exitosamente.");
-        } catch (error) {
-            setMensaje("Ocurrió un error al crear la cita."),error;
-        }
-    }  
+      handleBuy(venta.amount, venta);
 
+      setMensaje("Cita y venta creadas exitosamente.");
+    } catch (error) {
+      setMensaje("Ocurrió un error al crear la cita."), error;
+    }
+  };
 
   if (!service) return <p className="text-center text-lg">Cargando...</p>;
   return (
@@ -88,7 +87,9 @@ export default function Sale(){
           <p className="text-gray-600 mb-4 leading-relaxed">
             {service.descripcion}
           </p>
-          <p className="text-highlight text-2xl mb-6">${service.precio}</p>
+          <p className="text-highlight text-2xl mb-6">
+            {formatToChileanPeso(service.precio)}
+          </p>
 
           {/* Inputs para cita */}
           <div className="mb-4 space-y-2">
@@ -135,4 +136,4 @@ export default function Sale(){
       </div>
     </div>
   );
-};
+}
