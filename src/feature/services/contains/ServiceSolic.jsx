@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import ApiBitacora from "../../../api/ApiBitacora";
 
 function ServiceSolic() {
   const { user } = useAuth();
@@ -16,32 +16,10 @@ function ServiceSolic() {
 
     const fetchServicios = async () => {
       try {
-        // const res = await axios.get(`/api/usuarios/${user.rut}/servicios-solicitados`);
-        // setServicios(res.data);
-
-        // Simulación temporal sin backend:
-        const data = [
-          {
-            id_servicio: 1,
-            nombre_servicio: "Clases de guitarra",
-            tipo_servicio: "Educación",
-            descripcion: "Curso intensivo para principiantes",
-            fecha_venta: "2025-05-14",
-            total: 30000,
-          },
-          {
-            id_servicio: 2,
-            nombre_servicio: "Paseo de mascotas",
-            tipo_servicio: "Mascotas",
-            descripcion: "Paseo de perros diario por 1 hora",
-            fecha_venta: "2025-05-13",
-            total: 10000,
-          },
-        ];
-
-        setServicios(data);
+        const res = await ApiBitacora.getBitacoraServicios(user.rut);
+        setServicios(res);
       } catch (error) {
-        console.error("Error al obtener servicios solicitados (simulado):", error);
+        console.error("Error al obtener servicios:", error);
       }
     };
 
@@ -50,19 +28,21 @@ function ServiceSolic() {
 
   const handleCancelar = async (id) => {
     try {
-      await axios.put(`/api/ventas/${id}/cancelar`); 
-      setServicios((prev) => prev.filter((s) => s.id_servicio !== id));
+      await ApiBitacora.cancelarCita(id);
+      setServicios((prev) =>
+        prev.map((s) => (s.id_cita === id ? { ...s, estado_cita: "cancelada" } : s))
+      );
     } catch (error) {
-      console.error("Error al cancelar servicio:", error);
+      console.error("Error al cancelar cita:", error);
     }
   };
 
   const handleBorrar = async (id) => {
     try {
-      await axios.delete(`/api/ventas/${id}`); 
-      setServicios((prev) => prev.filter((s) => s.id_servicio !== id));
+      await ApiBitacora.eliminarCita(id);
+      setServicios((prev) => prev.filter((s) => s.id_cita !== id));
     } catch (error) {
-      console.error("Error al borrar servicio:", error);
+      console.error("Error al borrar cita:", error);
     }
   };
 
@@ -81,26 +61,30 @@ function ServiceSolic() {
               <th className="px-4 py-2 border">Descripción</th>
               <th className="px-4 py-2 border">Fecha</th>
               <th className="px-4 py-2 border">Total</th>
+              <th className="px-4 py-2 border">Estado</th>
               <th className="px-4 py-2 border">Acciones</th>
             </tr>
           </thead>
           <tbody>
             {servicios.map((s) => (
-              <tr key={d_servicio} className="hover:bg-gray-50">
+              <tr key={s.id_cita || s.id_venta} className="hover:bg-gray-50">
                 <td className="px-4 py-2 border">{s.nombre_servicio}</td>
                 <td className="px-4 py-2 border">{s.tipo_servicio}</td>
                 <td className="px-4 py-2 border">{s.descripcion}</td>
                 <td className="px-4 py-2 border">{s.fecha_venta}</td>
                 <td className="px-4 py-2 border">${s.total}</td>
+                <td className="px-4 py-2 border capitalize">{s.estado_cita || "sin cita"}</td>
                 <td className="px-4 py-2 border space-x-2">
+                  {s.estado_cita !== "cancelada" && (
+                    <button
+                      onClick={() => handleCancelar(s.id_cita)}
+                      className="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600"
+                    >
+                      Cancelar
+                    </button>
+                  )}
                   <button
-                    onClick={() => handleCancelar(s.id_servicio)}
-                    className="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600"
-                  >
-                    Cancelar
-                  </button>
-                  <button
-                    onClick={() => handleBorrar(s.id_servicio)}
+                    onClick={() => handleBorrar(s.id_cita)}
                     className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
                   >
                     Borrar
