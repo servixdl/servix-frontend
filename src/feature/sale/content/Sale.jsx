@@ -127,7 +127,6 @@ export default function Sale() {
             <button className="btn-primary" onClick={handleAppointment}>
               Agendar y Comprar
             </button>
-            <button className="btn-outline">Valorar servicio</button>
           </div>
 
           {/* Mensaje */}

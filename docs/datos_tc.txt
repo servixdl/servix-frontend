@@ -1,0 +1,5 @@
+VISA	4051 8856 0044 6623
+CVV 123
+cualquier fecha de expiración
+
+formulario de autenticación con RUT y clave, se debe usar el RUT 11.111.111-1 y la clave 123.
