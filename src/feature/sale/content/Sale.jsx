@@ -38,6 +38,20 @@ export default function Sale() {
     }
   };
 
+  const handleHoraInicioChange = (e) => {
+    const inicio = e.target.value;
+    setHoraInicio(inicio);
+
+    // Sumar 1 hora automáticamente
+    const [horas, minutos] = inicio.split(":").map(Number);
+    const nuevaHora = new Date();
+    nuevaHora.setHours(horas + 1);
+    nuevaHora.setMinutes(minutos);
+
+    const termino = nuevaHora.toTimeString().slice(0, 5); // formato HH:mm
+    setHoraTermino(termino);
+  };
+
   const handleAppointment = async () => {
     if (!fechaCita || !horaInicio || !horaTermino) {
       setMensaje("Por favor, completa todos los campos de la cita.");
@@ -111,7 +125,7 @@ export default function Sale() {
               <input
                 type="time"
                 value={horaInicio}
-                onChange={(e) => setHoraInicio(e.target.value)}
+                onChange={handleHoraInicioChange}
                 className="input"
               />
             </label>
@@ -120,8 +134,7 @@ export default function Sale() {
               <input
                 type="time"
                 value={horaTermino}
-                onChange={(e) => setHoraTermino(e.target.value)}
-                className="input"
+                readOnly // para que no sea editable
               />
             </label>
           </div>
