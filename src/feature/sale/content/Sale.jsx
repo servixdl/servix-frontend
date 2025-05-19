@@ -147,5 +147,6 @@ export default function Sale() {
         </div>
       </div>
     </div>
-  );
+  
+);
 }

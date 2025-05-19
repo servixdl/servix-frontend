@@ -115,5 +115,6 @@ export default function SalePay() {
         <p className="text-gray-500">Cargando datos...</p>
       )}
     </div>
-  );
+ 
+);
 }
