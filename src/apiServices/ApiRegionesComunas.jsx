@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const BASE_URL = "http://localhost:3000/localities";
+// const BASE_URL = "http://localhost:3000/localities";
+const BASE_URL = "https://servix-backend.onrender.com/localities";
 
 const ApiRegionesComunas = {
   getRegiones: async () => {
@@ -11,7 +12,7 @@ const ApiRegionesComunas = {
   getComunasByRegionId: async (regionId) => {
     const res = await axios.get(`${BASE_URL}/comunes/${regionId}`);
     return res.data;
-  }
+  },
 };
 
 export default ApiRegionesComunas;
