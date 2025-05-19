@@ -11,21 +11,11 @@ function ServiceSolic() {
   const navigate = useNavigate();
   const [servicios, setServicios] = useState([]);
 
-  useEffect(() => {
-    if (!user?.rut) {
-      navigate("/login");
-      return;
-    }
+ 
 
     const fetchServicios = async () => {
       try {
-        // const res = await axios.get(`/api/usuarios/${user.rut}/servicios-solicitados`);
-        // setServicios(res.data);
-
-        // Simulación temporal sin backend:
         const dataService = await ApiTransaction.getByRut(rut)
-        console.log(dataService)
-        
         setServicios(dataService);
       } catch (error) {
         console.error(
@@ -34,13 +24,19 @@ function ServiceSolic() {
         );
       }
     };
+     useEffect(() => {
+    if (!user?.rut) {
+      navigate("/login");
+      return;
+    }
 
     fetchServicios();
   }, [user, navigate]);
   
   const handleCancelar = async (id) => {
     try {
-      await ApiAppointment.updateCancel(id)
+      await ApiAppointment.updateCancel(id);
+      await fetchServicios();
       //setServicios((prev) => prev.filter((s) => s.id_servicio !== id));
     } catch (error) {
       console.error("Error al cancelar servicio:", error);
@@ -51,6 +47,7 @@ function ServiceSolic() {
     try {
       //await axios.delete(`/api/ventas/${id}`);
       setServicios((prev) => prev.filter((s) => s.id_servicio !== id));
+       
     } catch (error) {
       console.error("Error al borrar servicio:", error);
     }
