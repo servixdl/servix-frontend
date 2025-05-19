@@ -1,15 +1,16 @@
 import { useState, useContext } from "react";
 import { RiCloseLargeLine, RiMenuFill } from "react-icons/ri";
 import { Link } from "react-router-dom";
-import { useAuth } from "../context/AuthContext.jsx";
+import { useAuth } from "../../context/AuthContext.jsx";
 import React from "react";
-import { ServiceProviderContext } from "../context/serviceProviderContext.jsx";
+import { ServiceProviderContext } from "../../context/serviceProviderContext.jsx";
 import Swal from "sweetalert2";
+
 export default function Navbar() {
   const { user, logout } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
   const { serviceP } = useContext(ServiceProviderContext);
-  console.log(serviceP);
+
   const buttons = (
     ruta1,
     nombre1,
@@ -24,7 +25,6 @@ export default function Navbar() {
         <Link to={ruta1} className={class1}>
           {nombre1}
         </Link>
-
         {nombre2 === "Cerrar sesión" ? (
           <button className={class2} onClick={onSecondClick}>
             {nombre2}
@@ -50,20 +50,15 @@ export default function Navbar() {
           <Link to="/allservice" className="text-sm hover:underline">
             Servicios
           </Link>
-          <Link to="/register" className="text-sm hover:underline">
-            Ofrecer un servicio
-          </Link>
-          <Link to="/contact" className="text-sm hover:underline">
-            Contacto
-          </Link>
-          {serviceP ? (
-            <>
-              <Link to="/myServices" className="text-sm hover:underline">
-                Mis servicios
-              </Link>
-            </>
-          ) : (
-            <></>
+          {!user && (
+            <Link to="/register" className="text-sm hover:underline">
+              Ofrecer un servicio
+            </Link>
+          )}
+          {user && (
+            <Link to="/myServices" className="text-sm hover:underline">
+              Mis servicios
+            </Link>
           )}
           {user && (
             <Link
@@ -121,12 +116,27 @@ export default function Navbar() {
           <Link to="/allservice" className="block text-sm hover:underline">
             Servicios
           </Link>
-          <Link to="/offerservice" className="block text-sm hover:underline">
-            Ofrecer un servicio
-          </Link>
+          {!user && (
+            <Link to="/register" className="block text-sm hover:underline">
+              Ofrecer un servicio
+            </Link>
+          )}
           <Link to="/contact" className="block text-sm hover:underline">
             Contacto
           </Link>
+          {user && (
+            <Link to="/myServices" className="block text-sm hover:underline">
+              Mis servicios
+            </Link>
+          )}
+          {user && (
+            <Link
+              to="/servicios-solicitados"
+              className="block text-sm hover:underline"
+            >
+              Servicios Solicitados
+            </Link>
+          )}
           <div className="flex flex-col gap-2 pt-2">
             {!user
               ? buttons(

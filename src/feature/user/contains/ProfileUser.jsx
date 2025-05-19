@@ -2,11 +2,16 @@
 import { useAuth } from "../../../context/AuthContext";
 import React, { useState, useEffect, useRef } from "react";
 import { UserCircleIcon } from "@heroicons/react/24/solid";
-import { Switch } from "@headlessui/react";
 import ApiRegionesComunas from "../../../apiServices/ApiRegionesComunas";
 import ApiUser from "../../../apiServices/ApiUser";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Link } from "react-router-dom";
+import InputField from "../../../components/atomic/InputField";
+import SelectField from "../../../components/atomic/SelectField";
+import TextAreaField from "../../../components/atomic/TextAreaField";
+import Button from "../../../components/atomic/Button";
+import FormLayout from "../../../layouts/FormsLayouts";
 
 export default function PerfilUsuario() {
   const { user } = useAuth();
@@ -205,9 +210,9 @@ export default function PerfilUsuario() {
   };
 
   return (
-    <div className="flex justify-center mt-10">
-      <div className="border border-gray-700 p-6 rounded-lg shadow-lg w-full max-w-xl text-center bg-white">
-        <h1 className="text-2xl font-bold mb-4 text-red-600">
+    <FormLayout>
+      <div className="w-full max-w-lg bg-white p-8 rounded-xl shadow-md my-20">
+        <h1 className="text-2xl font-bold mb-4 text-highlight text-center">
           ¡Bienvenido a Servix, {primerNombre}!
         </h1>
 
@@ -263,8 +268,8 @@ export default function PerfilUsuario() {
         </p>
 
         <div className="text-left mt-6">
-          <label className="block mb-1 font-semibold">Dirección:</label>
-          <input
+          <InputField
+            label="Dirección"
             ref={direccionRef}
             type="text"
             className="w-full px-3 py-2 border rounded mb-4"
@@ -272,6 +277,19 @@ export default function PerfilUsuario() {
             onChange={(e) => setDireccion(e.target.value)}
             placeholder="Ingresa tu dirección"
             disabled={bloqueado}
+          />
+
+          <SelectField
+            label="Región:"
+            name="region"
+            value={regionSeleccionada}
+            onChange={(e) => setRegionSeleccionada(e.target.value)}
+            options={regiones.map((region) => ({
+              value: region.id,
+              label: region.nombre,
+            }))}
+            placeholder="Selecciona una región"
+            disabled={bloqueado}
             onClick={() =>
               bloqueado &&
               toast.info(
@@ -280,122 +298,69 @@ export default function PerfilUsuario() {
             }
           />
 
-          <label className="block mb-1 font-semibold">Región:</label>
-          <select
-            className="w-full px-3 py-2 border rounded mb-4"
-            value={regionSeleccionada}
-            onChange={(e) => setRegionSeleccionada(e.target.value)}
-            disabled={bloqueado}
+          <SelectField
+            label="Comuna:"
+            name="comuna"
+            value={comunaSeleccionada}
+            onChange={(e) => setComunaSeleccionada(e.target.value)}
+            options={comunas.map((comuna) => ({
+              value: comuna.id,
+              label: comuna.nombre,
+            }))}
+            placeholder="Selecciona una comuna"
+            disabled={!comunas.length || bloqueado}
             onClick={() =>
               bloqueado &&
               toast.info(
                 'Debes presionar el botón "Editar" para modificar este campo'
               )
             }
-          >
-            <option value="">Selecciona una región</option>
-            {regiones.map((region) => (
-              <option key={region.id} value={region.id}>
-                {region.nombre}
-              </option>
-            ))}
-          </select>
-          {regionSeleccionada && (
-            <p className="text-sm text-gray-600 mb-2">
-              Región seleccionada:{" "}
-              {
-                regiones.find((r) => r.id.toString() === regionSeleccionada)
-                  ?.nombre
-              }
-            </p>
-          )}
+          />
 
-          <label className="block mb-1 font-semibold">Comuna:</label>
-          <select
-            className="w-full px-3 py-2 border rounded mb-4"
-            value={comunaSeleccionada}
-            onChange={(e) => setComunaSeleccionada(e.target.value)}
-            disabled={!comunas.length || bloqueado}
-          >
-            <option value="">Selecciona una comuna</option>
-            {comunas.map((comuna) => (
-              <option key={comuna.id} value={comuna.id}>
-                {comuna.nombre}
-              </option>
-            ))}
-          </select>
-          {comunaSeleccionada && (
-            <p className="text-sm text-gray-600 mb-2">
-              Comuna seleccionada:{" "}
-              {
-                comunas.find((c) => c.id.toString() === comunaSeleccionada)
-                  ?.nombre
-              }
-            </p>
-          )}
-
-          <label className="block mb-1 font-semibold">Teléfono:</label>
-          <input
+          <InputField
+            label="Teléfono:"
             type="tel"
             className="w-full px-3 py-2 border rounded mb-6"
             value={telefono}
             onChange={handleTelefonoChange}
             placeholder="Ingresa tu número de teléfono"
             disabled={bloqueado}
-            onClick={() =>
-              bloqueado &&
-              toast.info(
-                'Debes presionar el botón "Editar" para modificar este campo'
-              )
-            }
           />
 
           <div className="flex items-center mb-4">
-            <Switch
-              checked={ofrecerServicio}
-              onChange={setOfrecerServicio}
-              className={`${
-                ofrecerServicio ? "bg-green-600" : "bg-gray-300"
-              } relative inline-flex h-6 w-11 items-center rounded-full mr-3`}
-              disabled={bloqueado}
-              onClick={() =>
-                bloqueado &&
-                toast.info(
-                  'Debes presionar el botón "Editar" para modificar este campo'
-                )
-              }
-            >
-              <span className="sr-only">Ofrecer servicio</span>
-              <span
-                className={`${
-                  ofrecerServicio ? "translate-x-6" : "translate-x-1"
-                } inline-block h-4 w-4 transform rounded-full bg-white transition`}
-              />
-            </Switch>
-            <span className="font-semibold">Ofrecer servicio</span>
+            {ofrecerServicio ? null : (
+              <p className="mb-4">
+                <span className="ml-2">
+                  ¿Quieres ofrecer tus servicios?{" "}
+                  <Link
+                    to={"/myServices"}
+                    className="text-blue-600 underline hover:text-blue-800"
+                  >
+                    Publica un servicio aquí
+                  </Link>
+                </span>
+              </p>
+            )}
           </div>
+
+          <p className="mb-4">
+            Ya que ofreces servicios, indica a tus clientes algo sobre ti:
+          </p>
 
           {ofrecerServicio && (
             <>
-              <label className="block mb-1 font-semibold">Oficio:</label>
-              <input
+              <InputField
+                label="Especialidad:"
                 type="text"
-                className="w-full px-3 py-2 border rounded mb-4"
                 value={oficio}
                 onChange={(e) => setOficio(e.target.value)}
                 placeholder="Ingresa tu oficio"
                 disabled={bloqueado}
-                onClick={() =>
-                  bloqueado &&
-                  toast.info(
-                    'Debes presionar el botón "Editar" para modificar este campo'
-                  )
-                }
               />
 
-              <label className="block mb-1 font-semibold">Mensaje:</label>
-              <textarea
-                className="w-full px-3 py-2 border rounded mb-4"
+              <TextAreaField
+                label="Mi experiencia:"
+                name="experiencia"
                 value={experiencia}
                 onChange={(e) => setExperiencia(e.target.value)}
                 placeholder="Comenta brevemente tu experiencia"
@@ -411,24 +376,24 @@ export default function PerfilUsuario() {
           )}
 
           <div className="flex justify-between gap-4">
-            <button
+            <Button
               onClick={handleSubmit}
-              className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded w-full cursor-pointer flex items-center justify-center gap-2"
+              variant="primary"
               disabled={bloqueado || enviando}
             >
               {enviando && (
                 <span className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></span>
               )}
               Guardar cambios
-            </button>
+            </Button>
 
-            <button
+            <Button
               onClick={handleEditar}
-              className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded w-full cursor-pointer"
+              variant="outline"
               disabled={!bloqueado}
             >
               Editar
-            </button>
+            </Button>
           </div>
 
           {enviando && (
@@ -436,6 +401,6 @@ export default function PerfilUsuario() {
           )}
         </div>
       </div>
-    </div>
+    </FormLayout>
   );
 }

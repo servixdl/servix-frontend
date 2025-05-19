@@ -18,9 +18,9 @@ export default function Hero() {
             <Link to="/allservice" type="button" className="btn-primary">
               Explorar Servicios
             </Link>
-            <button type="button" className="btn-outline">
+            <Link to="/myServices" type="button" className="btn-outline">
               Ofrecer un servicio
-            </button>
+            </Link>
           </div>
           <div className="flex justify-center lg:justify-start mt-8">
             <div className="bg-background flex items-center rounded-full border px-3 py-1 shadow-sm gap-3 flex-wrap">

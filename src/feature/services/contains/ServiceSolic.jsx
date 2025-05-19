@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import ApiBitacora from "../../../api/ApiBitacora";
+import ApiBitacora from "../../../apiServices/ServiSolicitados";
 
 function ServiceSolic() {
   const { user } = useAuth();
@@ -47,13 +47,13 @@ function ServiceSolic() {
   };
 
   return (
-    <div className="p-6 overflow-x-auto">
+    <div className="p-6 overflow-x-auto max-w-7xl mx-auto">
       <h2 className="text-2xl font-bold mb-4">Servicios Solicitados</h2>
 
       {servicios.length === 0 ? (
         <p className="text-gray-600">No has solicitado servicios aún.</p>
       ) : (
-        <table className="min-w-full bg-white border border-gray-200 shadow rounded">
+        <table className="min-w-full bg-white  -gray-200 rounded-lg shadow">
           <thead>
             <tr className="bg-gray-100 text-left">
               <th className="px-4 py-2 border">Servicio</th>
@@ -65,7 +65,7 @@ function ServiceSolic() {
               <th className="px-4 py-2 border">Acciones</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="text-gray-700 text-sm">
             {servicios.map((s) => (
               <tr key={s.id_cita || s.id_venta} className="hover:bg-gray-50">
                 <td className="px-4 py-2 border">{s.nombre_servicio}</td>
