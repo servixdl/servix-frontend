@@ -1,8 +1,9 @@
 import axios from "axios";
-const BASE_URL = "http://localhost:3000/types_services";
+// const BASE_URL = "http://localhost:3000/types_services";
+const BASE_URL = "https://servix-backend.onrender.com/types_services";
 
 const getAuthHeader = () => {
-  const token = sessionStorage.getItem('token');
+  const token = sessionStorage.getItem("token");
   return token ? { headers: { Authorization: `Bearer ${token}` } } : {};
 };
 
@@ -15,7 +16,7 @@ const ApiTypesServices = {
       console.error("Error al obtener todos los servicios:", error);
       throw error;
     }
-  }
-}
+  },
+};
 
-export default ApiTypesServices
+export default ApiTypesServices;

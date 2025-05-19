@@ -222,7 +222,8 @@ export default function PerfilUsuario() {
               <img
                 src={
                   typeof imagen === "string"
-                    ? `http://localhost:3000/uploads/${imagen}`
+                    ? // ? `http://localhost:3000/uploads/${imagen}`
+                      `https://servix-backend.onrender.com/uploads/${imagen}`
                     : URL.createObjectURL(imagen)
                 }
                 alt="Perfil"
