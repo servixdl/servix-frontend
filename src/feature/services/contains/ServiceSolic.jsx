@@ -2,8 +2,10 @@ import React, { useEffect, useState } from "react";
 import { useAuth } from "../../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-
+import ApiTransaction from "../../../apiServices/ApiTransaction";
+import dateFormat from "../../../utils/FormatDate";
 function ServiceSolic() {
+  const rut = sessionStorage.getItem("rut")
   const { user } = useAuth();
   const navigate = useNavigate();
   const [servicios, setServicios] = useState([]);
@@ -20,26 +22,10 @@ function ServiceSolic() {
         // setServicios(res.data);
 
         // Simulación temporal sin backend:
-        const data = [
-          {
-            id_servicio: 1,
-            nombre_servicio: "Clases de guitarra",
-            tipo_servicio: "Educación",
-            descripcion: "Curso intensivo para principiantes",
-            fecha_venta: "2025-05-14",
-            total: 30000,
-          },
-          {
-            id_servicio: 2,
-            nombre_servicio: "Paseo de mascotas",
-            tipo_servicio: "Mascotas",
-            descripcion: "Paseo de perros diario por 1 hora",
-            fecha_venta: "2025-05-13",
-            total: 10000,
-          },
-        ];
-
-        setServicios(data);
+        const dataService = await ApiTransaction.getByRut(rut)
+        console.log(dataService)
+        
+        setServicios(dataService);
       } catch (error) {
         console.error(
           "Error al obtener servicios solicitados (simulado):",
@@ -50,7 +36,7 @@ function ServiceSolic() {
 
     fetchServicios();
   }, [user, navigate]);
-
+  
   const handleCancelar = async (id) => {
     try {
       await axios.put(`/api/ventas/${id}/cancelar`);
@@ -80,21 +66,22 @@ function ServiceSolic() {
           <thead>
             <tr className="bg-gray-100 text-left text-gray-600 uppercase text-sm leading-normal">
               <th className="px-4 py-2 ">Servicio</th>
-              <th className="px-4 py-2 ">Tipo</th>
               <th className="px-4 py-2 ">Descripción</th>
               <th className="px-4 py-2 ">Fecha</th>
               <th className="px-4 py-2 ">Total</th>
+              <th className="px-4 py-2 ">Estado</th>
               <th className="px-4 py-2 ">Acciones</th>
+              
             </tr>
           </thead>
           <tbody className="text-gray-700 text-sm">
             {servicios.map((s) => (
-              <tr key={s.id_servicio} className="hover:bg-gray-50">
-                <td className="px-4 py-2 ">{s.nombre_servicio}</td>
-                <td className="px-4 py-2 ">{s.tipo_servicio}</td>
+              <tr key={s.id_cita} className="hover:bg-gray-50">
+                <td className="px-4 py-2 ">{s.nombre}</td>
                 <td className="px-4 py-2 ">{s.descripcion}</td>
-                <td className="px-4 py-2 ">{s.fecha_venta}</td>
+                <td className="px-4 py-2 ">{dateFormat(s.fecha_venta)}</td>
                 <td className="px-4 py-2 ">${s.total}</td>
+                 <td className="px-4 py-2 ">{s.estado}</td>
                 <td className="px-4 py-2  space-x-2">
                   <button
                     onClick={() => handleCancelar(s.id_servicio)}
