@@ -216,21 +216,27 @@ export default function RegisterPage() {
               label="Día"
               value={form.day}
               onChange={handleChange}
-              options={Array.from({ length: 31 }, (_, i) => i + 1)}
+              options={Array.from({ length: 31 }, (_, i) => ({
+                value: i + 1,
+                label: i + 1,
+              }))}
             />
             <SelectField
               name="month"
               label="Mes"
               value={form.month}
               onChange={handleChange}
-              options={Array.from({ length: 12 }, (_, i) => i + 1)}
+              options={Array.from({ length: 12 }, (_, i) => ({
+                value: i + 1,
+                label: i + 1,
+              }))}
             />
             <SelectField
               name="year"
               label="Año"
               value={form.year}
               onChange={handleChange}
-              options={years}
+              options={years.map((y) => ({ value: y, label: y }))}
             />
           </div>
         </div>

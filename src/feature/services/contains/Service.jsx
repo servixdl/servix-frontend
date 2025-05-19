@@ -58,7 +58,6 @@ export default function ServicePage() {
             >
               Solicitar servicio
             </Link>
-            <button className="btn-outline">Valorar servicio</button>
           </div>
         </div>
       </div>
