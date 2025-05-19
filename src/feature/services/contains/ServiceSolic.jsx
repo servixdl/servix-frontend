@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import ApiTransaction from "../../../apiServices/ApiTransaction";
 import dateFormat from "../../../utils/FormatDate";
+import ApiAppointment from "../../../apiServices/ApiAppointment";
 function ServiceSolic() {
   const rut = sessionStorage.getItem("rut")
   const { user } = useAuth();
@@ -39,8 +40,8 @@ function ServiceSolic() {
   
   const handleCancelar = async (id) => {
     try {
-      await axios.put(`/api/ventas/${id}/cancelar`);
-      setServicios((prev) => prev.filter((s) => s.id_servicio !== id));
+      await ApiAppointment.updateCancel(id)
+      //setServicios((prev) => prev.filter((s) => s.id_servicio !== id));
     } catch (error) {
       console.error("Error al cancelar servicio:", error);
     }
@@ -48,7 +49,7 @@ function ServiceSolic() {
 
   const handleBorrar = async (id) => {
     try {
-      await axios.delete(`/api/ventas/${id}`);
+      //await axios.delete(`/api/ventas/${id}`);
       setServicios((prev) => prev.filter((s) => s.id_servicio !== id));
     } catch (error) {
       console.error("Error al borrar servicio:", error);
@@ -83,12 +84,17 @@ function ServiceSolic() {
                 <td className="px-4 py-2 ">${s.total}</td>
                  <td className="px-4 py-2 ">{s.estado}</td>
                 <td className="px-4 py-2  space-x-2">
-                  <button
-                    onClick={() => handleCancelar(s.id_servicio)}
+                  {s.estado === "cancelada"?(
+                    <></>
+                  ) :(
+                    <button
+                    onClick={() => handleCancelar(s.id_cita)}
                     className="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600"
                   >
                     Cancelar
                   </button>
+                  )}
+                  
                   <button
                     onClick={() => handleBorrar(s.id_servicio)}
                     className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"

@@ -15,5 +15,16 @@ const ApiAppointment = {
     const response = await axios.get(BASE_URL, getAuthHeader());
     return response.data;
   },
+   updateCancel: async (id) => {
+      try{
+        const response = await axios.put(`${BASE_URL}/cancel/${id}`,undefined,getAuthHeader());
+        console.log(response.data)
+    return response.data;
+      }catch(error){
+              console.error('Error al cancelar el servicio',error);
+      throw error;
+      }
+    
+  }, 
 };
 export default ApiAppointment;
