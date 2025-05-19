@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "http://localhost:3000/ServiSolicitados"; // Coincide con tu backend
+const BASE_URL = "https://servix-backend.onrender.com/ServiSolicitados";// Coincide con tu backend
 
 const getAuthHeader = () => {
   const token = sessionStorage.getItem("token");
