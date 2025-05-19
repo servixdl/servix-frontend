@@ -100,14 +100,14 @@ export default function SalePay() {
               <strong>Total:</strong> ${sale.total}
             </p>
             <p>
-              <strong>Fecha Venta:</strong> {sale.fecha_venta}
+              <strong>Fecha Venta:</strong> {dateFormat(sale.fecha_venta)}
             </p>
           </div>
 
           <div className="bg-gray-100 p-4 rounded-lg">
             <h2 className="font-semibold text-lg mb-2">Datos de la Cita</h2>
             <p>
-              <strong>Fecha Cita:</strong> {appointment.fecha_cita}
+              <strong>Fecha Cita:</strong> {dateFormat(appointment.fecha_cita)}
             </p>
             <p>
               <strong>Hora:</strong> {appointment.hora_inicio} -{" "}

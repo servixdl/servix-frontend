@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useAuth } from "../../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import ApiBitacora from "../../../apiServices/ServiSolicitados";
-
+import dateFormat from "../../../utils/FormatDate";
 function ServiceSolic() {
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -71,7 +71,7 @@ function ServiceSolic() {
                 <td className="px-4 py-2 border">{s.nombre_servicio}</td>
                 <td className="px-4 py-2 border">{s.tipo_servicio}</td>
                 <td className="px-4 py-2 border">{s.descripcion}</td>
-                <td className="px-4 py-2 border">{s.fecha_venta}</td>
+                <td className="px-4 py-2 border">{dateFormat(s.fecha_venta)}</td>
                 <td className="px-4 py-2 border">${s.total}</td>
                 <td className="px-4 py-2 border capitalize">{s.estado_cita || "sin cita"}</td>
                 <td className="px-4 py-2 border space-x-2">
