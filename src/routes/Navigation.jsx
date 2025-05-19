@@ -6,7 +6,7 @@ import AllServicePage from "../feature/services/contains/AllServices.jsx";
 import RegisterPage from "../feature/user/contains/Register.jsx";
 import LoginPage from "../feature/user/contains/Login.jsx";
 import PerfilUsuario from "../feature/user/contains/ProfileUser.jsx";
-import NotFound from "../feature/notFound/NotFound.jsx";
+import NotFound from "../feature/notfound/NotFound.jsx";
 import Sale from "../feature/sale/content/Sale.jsx";
 import ServiceSolic from "../../src/feature/services/contains/ServiceSolic.jsx";
 import MyServices from "../feature/myServices/contens/MyServices.jsx";

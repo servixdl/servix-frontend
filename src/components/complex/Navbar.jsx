@@ -121,9 +121,6 @@ export default function Navbar() {
               Ofrecer un servicio
             </Link>
           )}
-          <Link to="/contact" className="block text-sm hover:underline">
-            Contacto
-          </Link>
           {user && (
             <Link to="/myServices" className="block text-sm hover:underline">
               Mis servicios
