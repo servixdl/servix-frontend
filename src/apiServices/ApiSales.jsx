@@ -1,4 +1,5 @@
-const BASE_URL = "http://localhost:3000/sales";
+// const BASE_URL = "http://localhost:3000/sales";
+const BASE_URL = "https://servix-backend.onrender.com/sales";
 import axios from "axios";
 import { getAuthHeader } from "./GetAuthHeader";
 

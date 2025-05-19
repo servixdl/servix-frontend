@@ -22,10 +22,14 @@ export default function Sale() {
 
   const handleBuy = async (amount, venta) => {
     try {
-      const response = await axios.post("http://localhost:3000/webpay/crear", {
-        amount,
-        venta,
-      });
+      // const response = await axios.post("http://localhost:3000/webpay/crear", {
+      const response = await axios.post(
+        "https://servix-backend.onrender.com/webpay/crear",
+        {
+          amount,
+          venta,
+        }
+      );
       const { url, token } = response.data;
 
       window.location.href = `${url}?token_ws=${token}`;
